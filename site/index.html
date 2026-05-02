@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CoderPush — AI engineering studio · Vietnam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="shared.css" />
+<style>
+  /* ============ HERO ============ */
+  .hero {
+    padding: 80px 0 96px;
+    border-bottom: 1px solid var(--line);
+    position: relative; overflow: hidden;
+  }
+  .hero-grid {
+    display: grid; grid-template-columns: 1.15fr 1fr;
+    gap: 56px; align-items: start;
+  }
+  @media (max-width: 960px) { .hero-grid { grid-template-columns: 1fr; gap: 40px; } }
+
+  .hero-meta {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0; margin-top: 56px;
+    border-top: 1px solid var(--line);
+  }
+  .hero-meta .cell {
+    padding: 20px 16px 0 0;
+    border-right: 1px solid var(--line);
+  }
+  .hero-meta .cell:last-child { border-right: none; padding-right: 0; }
+  .hero-meta .k { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+  .hero-meta .v { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text); }
+  .hero-meta .v .green { color: var(--green); }
+  @media (max-width: 720px) {
+    .hero-meta { grid-template-columns: 1fr 1fr; }
+    .hero-meta .cell:nth-child(2) { border-right: none; }
+    .hero-meta .cell:nth-child(3), .hero-meta .cell:nth-child(4) { border-top: 1px solid var(--line); margin-top: 16px; padding-top: 16px; }
+  }
+
+  .hero-actions {
+    display: flex; gap: 12px; margin-top: 40px; flex-wrap: wrap;
+  }
+
+  /* ============ AGENT PANEL ============ */
+  .agent-panel {
+    border: 1px solid var(--line);
+    background: var(--bg-1);
+    overflow: hidden;
+    box-shadow: 0 0 0 1px var(--bg) inset;
+    position: relative;
+  }
+  .agent-panel .head {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-2);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--text-3); letter-spacing: 0.06em;
+  }
+  .agent-panel .head .left { display: flex; align-items: center; gap: 10px; }
+  .agent-panel .head .left .dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; box-shadow: var(--green-glow); animation: pulse 2.4s infinite; }
+  .agent-panel .head .right { color: var(--text-4); }
+
+  .agent-q {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .agent-q .you {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-3); letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  .agent-q select {
+    width: 100%; background: var(--bg-2); color: var(--text);
+    border: 1px solid var(--line-2); padding: 12px 14px; border-radius: 2px;
+    font-family: 'Inter Tight'; font-size: 14px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2381C828' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center;
+    cursor: pointer;
+  }
+
+  .agent-thinking {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--text-3); display: grid; gap: 6px;
+    min-height: 90px;
+  }
+  .agent-thinking .step {
+    display: flex; gap: 8px; align-items: baseline;
+    opacity: 0; transform: translateX(-4px);
+    transition: opacity 0.4s, transform 0.4s;
+  }
+  .agent-thinking .step.shown { opacity: 1; transform: translateX(0); }
+  .agent-thinking .step .icon { color: var(--green); font-family: monospace; }
+  .agent-thinking .step b { color: var(--text); font-weight: 400; }
+  .agent-thinking .step .src {
+    color: var(--green); border: 1px solid rgba(129,200,40,0.3);
+    padding: 1px 6px; border-radius: 2px; margin-left: 4px;
+    font-size: 10px;
+  }
+
+  .agent-answer {
+    padding: 18px 20px 20px;
+    min-height: 200px;
+    position: relative;
+  }
+  .agent-answer .label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--green); letter-spacing: 0.1em; margin-bottom: 10px;
+  }
+  .agent-answer .text {
+    color: var(--text); font-size: 15px; line-height: 1.65;
+    text-wrap: pretty;
+  }
+  .agent-answer .text b { color: var(--green); font-weight: 500; }
+  .agent-answer .citations {
+    margin-top: 16px; padding-top: 12px; border-top: 1px dashed var(--line-2);
+    display: flex; gap: 8px; flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--text-3); letter-spacing: 0.04em;
+  }
+  .agent-answer .citations .src {
+    border: 1px solid var(--line-2); padding: 3px 8px; border-radius: 2px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .agent-answer .citations .src:hover { color: var(--green); border-color: var(--green-dim); }
+
+  .agent-foot {
+    padding: 10px 16px;
+    border-top: 1px solid var(--line);
+    background: var(--bg-2);
+    display: flex; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--text-3); letter-spacing: 0.06em;
+  }
+  .agent-foot .replay {
+    color: var(--text-2); cursor: pointer; padding: 2px 6px;
+    border-radius: 2px; transition: color 0.15s, background 0.15s;
+  }
+  .agent-foot .replay:hover { color: var(--green); background: rgba(129,200,40,0.08); }
+
+  /* ============ PROOF STRIP ============ */
+  .proof {
+    padding: 36px 0;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .proof-inner {
+    display: grid; grid-template-columns: 240px 1fr;
+    gap: 32px; align-items: center;
+  }
+  @media (max-width: 720px) { .proof-inner { grid-template-columns: 1fr; gap: 16px; } }
+  .proof-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--text-3); letter-spacing: 0.1em; text-transform: uppercase;
+    line-height: 1.5;
+  }
+  .proof-label b { color: var(--text); font-weight: 500; }
+  .proof-logos {
+    display: grid; grid-template-columns: repeat(6, 1fr);
+    gap: 0; border-left: 1px solid var(--line);
+  }
+  @media (max-width: 720px) { .proof-logos { grid-template-columns: repeat(3, 1fr); } }
+  .proof-logos .logo-cell {
+    padding: 16px 12px; border-right: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    height: 56px;
+    color: var(--text-2); font-family: 'Inter Tight'; font-weight: 600;
+    font-size: 14px; letter-spacing: -0.02em;
+    transition: color 0.15s;
+  }
+  .proof-logos .logo-cell:hover { color: var(--text); }
+  .proof-logos .logo-cell:last-child { border-right: none; }
+
+  /* ============ METRIC TILES ============ */
+  .metrics-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-left: 1px solid var(--line);
+    border-top: 1px solid var(--line);
+  }
+  @media (max-width: 720px) { .metrics-grid { grid-template-columns: 1fr 1fr; } }
+  .metric {
+    padding: 28px 24px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    position: relative;
+  }
+  .metric .n {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(32px, 4vw, 52px);
+    color: var(--green); letter-spacing: -0.02em;
+    line-height: 1; margin-bottom: 14px;
+    font-weight: 500;
+  }
+  .metric .l { color: var(--text-2); font-size: 13px; line-height: 1.5; }
+  .metric .l b { color: var(--text); font-weight: 500; }
+  .metric .ix { position: absolute; top: 16px; right: 16px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-4); letter-spacing: 0.1em; }
+
+  /* ============ SERVICES ============ */
+  .services-list {
+    display: grid; grid-template-columns: 1fr;
+    border-top: 1px solid var(--line);
+  }
+  .svc-row {
+    display: grid; grid-template-columns: 80px 1fr 1.4fr 200px;
+    gap: 24px; align-items: center;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+    transition: background 0.2s;
+    position: relative;
+  }
+  .svc-row:hover { background: rgba(129,200,40,0.02); }
+  .svc-row:hover .svc-arrow { color: var(--green); transform: translateX(4px); }
+  @media (max-width: 900px) {
+    .svc-row { grid-template-columns: 50px 1fr 50px; }
+    .svc-row .svc-desc { display: none; }
+  }
+  .svc-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.1em; }
+  .svc-name { font-size: 22px; font-weight: 500; letter-spacing: -0.015em; }
+  .svc-name .green { color: var(--green); }
+  .svc-desc { color: var(--text-2); font-size: 14px; line-height: 1.5; }
+  .svc-arrow {
+    color: var(--text-3); font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    text-align: right; transition: color 0.2s, transform 0.2s;
+    letter-spacing: 0.06em;
+  }
+
+  /* ============ PRODUCTS (Presight / Promvis) ============ */
+  .products-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 900px) { .products-grid { grid-template-columns: 1fr; } }
+  .product-card {
+    border: 1px solid var(--line);
+    background: var(--bg-1);
+    padding: 28px;
+    display: flex; flex-direction: column;
+    transition: border-color 0.2s;
+    min-height: 380px;
+    position: relative; overflow: hidden;
+  }
+  .product-card:hover { border-color: var(--line-2); }
+  .product-card .head {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 24px;
+  }
+  .product-card .name {
+    font-size: 28px; letter-spacing: -0.025em; font-weight: 500;
+  }
+  .product-card .name .green { color: var(--green); }
+  .product-card .desc {
+    color: var(--text-2); font-size: 15px; line-height: 1.6;
+    text-wrap: pretty; margin-bottom: 20px;
+  }
+  .product-card .features {
+    list-style: none; margin-bottom: 24px;
+  }
+  .product-card .features li {
+    padding: 8px 0; border-top: 1px dashed var(--line-2);
+    color: var(--text-2); font-size: 13px;
+    display: grid; grid-template-columns: 18px 1fr; gap: 8px;
+  }
+  .product-card .features li:first-child { border-top: none; padding-top: 0; }
+  .product-card .features li::before {
+    content: "▸"; color: var(--green); font-family: monospace;
+  }
+  .product-card .footer {
+    margin-top: auto; display: flex; justify-content: space-between; align-items: center;
+    padding-top: 16px; border-top: 1px solid var(--line);
+  }
+  .product-card .visit {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--green); letter-spacing: 0.06em;
+    transition: filter 0.15s;
+  }
+  .product-card .visit:hover { filter: brightness(1.2); }
+
+  /* presight viz placeholder */
+  .product-viz {
+    background: var(--bg-2); border: 1px solid var(--line);
+    padding: 14px; margin-bottom: 18px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--text-3); border-radius: 2px;
+  }
+  .product-viz .row { display: flex; justify-content: space-between; padding: 4px 0; }
+  .product-viz .row .v { color: var(--green); }
+  .product-viz .row .v.b { color: var(--text); }
+  .product-viz .bar {
+    height: 4px; background: var(--bg-3); border-radius: 2px; overflow: hidden;
+    margin: 6px 0;
+  }
+  .product-viz .bar > span { display: block; height: 100%; background: var(--green); }
+
+  /* promvis viz */
+  .promvis-viz {
+    background: var(--bg-2); border: 1px solid var(--line); padding: 14px;
+    margin-bottom: 18px; border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--text-3); letter-spacing: 0.04em;
+  }
+  .promvis-nodes {
+    position: relative; height: 90px; margin: 4px 0;
+  }
+  .promvis-nodes svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  /* ============ CASE STUDIES ============ */
+  .cases-grid {
+    display: grid; grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 960px) { .cases-grid { grid-template-columns: 1fr; } }
+  .case-card {
+    border: 1px solid var(--line);
+    background: var(--bg-1);
+    padding: 24px;
+    display: flex; flex-direction: column; gap: 16px;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative; overflow: hidden;
+    min-height: 320px;
+  }
+  .case-card:hover { border-color: var(--line-2); background: var(--bg-2); }
+  .case-card.featured { grid-row: span 1; min-height: 320px; background: var(--bg-1); border-color: var(--line-2); }
+  .case-card .meta {
+    display: flex; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--text-3); letter-spacing: 0.08em;
+  }
+  .case-card .name {
+    font-size: clamp(20px, 2.4vw, 28px);
+    letter-spacing: -0.02em; line-height: 1.1;
+    font-weight: 500;
+  }
+  .case-card.featured .name {
+    font-size: clamp(28px, 3.6vw, 40px);
+  }
+  .case-card .name em { font-style: normal; color: var(--green); }
+  .case-card .desc {
+    color: var(--text-2); font-size: 14px; line-height: 1.6;
+    margin-top: auto;
+  }
+  .case-card .stats {
+    display: flex; gap: 20px; padding-top: 14px; border-top: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .case-card .stats .stat { display: flex; flex-direction: column; gap: 2px; }
+  .case-card .stats .n { font-size: 18px; color: var(--green); letter-spacing: -0.01em; }
+  .case-card .stats .l { font-size: 9px; color: var(--text-3); letter-spacing: 0.1em; }
+  .case-card .arrow {
+    position: absolute; bottom: 20px; right: 20px;
+    color: var(--text-3); font-family: monospace; font-size: 14px;
+    transition: color 0.2s, transform 0.2s;
+  }
+  .case-card:hover .arrow { color: var(--green); transform: translateX(2px); }
+
+  /* ============ MISSION ============ */
+  .mission {
+    padding: 120px 0;
+    border-bottom: 1px solid var(--line);
+    text-align: center;
+  }
+  .mission .quote {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: clamp(28px, 4vw, 48px); line-height: 1.2;
+    color: var(--text); letter-spacing: -0.015em;
+    max-width: 920px; margin: 32px auto 0;
+    text-wrap: balance;
+  }
+  .mission .quote .green { color: var(--green); }
+  .mission .attrib {
+    margin-top: 40px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--text-3); letter-spacing: 0.1em;
+  }
+
+  /* ============ CTA SPLIT ============ */
+  .cta-split {
+    display: grid; grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 720px) { .cta-split { grid-template-columns: 1fr; } }
+  .cta-pane {
+    padding: 80px 48px;
+    border-right: 1px solid var(--line);
+    transition: background 0.25s;
+    position: relative;
+  }
+  @media (max-width: 720px) { .cta-pane { padding: 60px 24px; border-right: none; border-bottom: 1px solid var(--line); } }
+  .cta-pane:last-child { border-right: none; }
+  .cta-pane:hover { background: rgba(129,200,40,0.03); }
+  .cta-pane h3 {
+    font-size: clamp(28px, 3.4vw, 40px); line-height: 1.05;
+    letter-spacing: -0.025em; font-weight: 500;
+    margin: 24px 0 16px; max-width: 480px;
+  }
+  .cta-pane h3 em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400; }
+  .cta-pane p { color: var(--text-2); font-size: 15px; line-height: 1.6; margin-bottom: 28px; max-width: 460px; }
+
+  /* ============ INSIGHTS preview ============ */
+  .insights-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  @media (max-width: 720px) { .insights-grid { grid-template-columns: 1fr; } }
+  .post {
+    padding: 28px 24px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 12px;
+    transition: background 0.2s;
+    cursor: pointer;
+    min-height: 240px;
+  }
+  .post:last-child { border-right: none; }
+  @media (max-width: 720px) { .post { border-right: none; } }
+  .post:hover { background: rgba(255,255,255,0.02); }
+  .post .meta {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--text-3); letter-spacing: 0.08em;
+    display: flex; gap: 12px;
+  }
+  .post .meta .green { color: var(--green); }
+  .post h4 {
+    font-size: 18px; line-height: 1.25; letter-spacing: -0.01em;
+    font-weight: 500; text-wrap: balance;
+    margin-top: auto;
+  }
+  .post .author {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--text-3); padding-top: 12px; border-top: 1px dashed var(--line-2);
+    display: flex; justify-content: space-between;
+  }
+</style>
+</head>
+<body data-screen-label="01 Home">
+<div id="cp-nav"></div>
+
+<!-- ============ HERO ============ -->
+<header class="hero grid-bg" data-screen-label="Home / Hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Vietnam · AI engineering studio · est. 2020</div>
+        <h1 class="display" style="margin-top: 28px;">
+          We build <span class="green">production AI</span><br/>
+          for systems that <em>can&rsquo;t&nbsp;fail.</em>
+        </h1>
+        <p style="margin-top: 28px; color: var(--text-2); font-size: 17px; line-height: 1.6; max-width: 540px;">
+          Eighty senior engineers in Hanoi and Ho Chi Minh City. Twenty AI-native specialists.
+          Shipping core banking, capital markets, and industrial AI &mdash; the kind of systems where downtime is measured in regulatory filings, not Slack apologies.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="service-hire.html">HIRE AI ENGINEERS <span class="arrow">→</span></a>
+          <a class="btn btn-ghost" href="services.html">BUILD AN AI PRODUCT <span class="arrow">→</span></a>
+        </div>
+        <div class="hero-meta">
+          <div class="cell"><div class="k">CLIENTS</div><div class="v"><span class="green">60+</span> worldwide</div></div>
+          <div class="cell"><div class="k">ENGINEERS</div><div class="v">80 / <span class="green">20 AI-native</span></div></div>
+          <div class="cell"><div class="k">PARTNER</div><div class="v">AWS · GenAI</div></div>
+          <div class="cell"><div class="k">CLUTCH</div><div class="v">★★★★★ <span style="color: var(--text-3);">/ 5.0</span></div></div>
+        </div>
+      </div>
+
+      <!-- Agent panel -->
+      <div>
+        <div class="agent-panel">
+          <div class="head">
+            <div class="left"><span class="dot"></span>agent.coderpush · live</div>
+            <div class="right">model: claude-sonnet · ctx 200k</div>
+          </div>
+          <div class="agent-q">
+            <div class="you">▸ ASK CODERPUSH</div>
+            <select id="agent-q-select">
+              <option value="why">Why CoderPush over a generic offshore shop?</option>
+              <option value="banking">How do you handle compliance for core banking?</option>
+              <option value="hire">Can I embed your engineers in my team?</option>
+              <option value="data">What is the AI Data Analyst exactly?</option>
+            </select>
+          </div>
+          <div class="agent-thinking" id="agent-thinking"></div>
+          <div class="agent-answer">
+            <div class="label">▸ ANSWER</div>
+            <div class="text" id="agent-text"></div>
+            <div class="citations" id="agent-cites"></div>
+          </div>
+          <div class="agent-foot">
+            <span>Q.001 · pre-cached · live model on production demo</span>
+            <span class="replay" id="agent-replay">↻ REPLAY</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ PROOF STRIP ============ -->
+<div class="proof" data-screen-label="Home / Proof">
+  <div class="wrap">
+    <div class="proof-inner">
+      <div class="proof-label">
+        <b>SHIPPED FOR</b><br/>
+        Banks, exchanges, energy operators, <br/>and 60+ enterprises worldwide.
+      </div>
+      <div class="proof-logos">
+        <div class="logo-cell">TPBank</div>
+        <div class="logo-cell">TPS</div>
+        <div class="logo-cell">Vietsovpetro</div>
+        <div class="logo-cell">Sleek</div>
+        <div class="logo-cell">Joe Coffee</div>
+        <div class="logo-cell">NunChuk</div>
+        <div class="logo-cell">Lemonade</div>
+        <div class="logo-cell">KnowledgeHut</div>
+        <div class="logo-cell">EtonHouse</div>
+        <div class="logo-cell">MapleHC</div>
+        <div class="logo-cell">Pressingly</div>
+        <div class="logo-cell">+ 49 more</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ METRICS ============ -->
+<section class="tight" data-screen-label="Home / Metrics" style="padding: 80px 0;">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num"><span class="green">§ 01</span> &nbsp;/&nbsp; PROOF</div>
+      <div>
+        <h2 class="display">Numbers from <em>real production</em>.</h2>
+        <p style="margin-top: 16px; color: var(--text-2); font-size: 15px; max-width: 580px;">
+          Pulled from active client systems. Not a marketing site &mdash; an engineering ledger.
+        </p>
+      </div>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric">
+        <div class="ix">M.01</div>
+        <div class="n">99.9%</div>
+        <div class="l"><b>Production uptime</b> across active client systems &mdash; 36-month rolling.</div>
+      </div>
+      <div class="metric">
+        <div class="ix">M.02</div>
+        <div class="n">20&times;</div>
+        <div class="l"><b>Performance gain</b> on Native Projex rebuild &mdash; same workload, new architecture.</div>
+      </div>
+      <div class="metric">
+        <div class="ix">M.03</div>
+        <div class="n">10B<span style="font-size: 0.6em;">&#8363;</span></div>
+        <div class="l"><b>Q1 revenue</b> on production AI delivery &mdash; FY26 to date.</div>
+      </div>
+      <div class="metric">
+        <div class="ix">M.04</div>
+        <div class="n">3<span style="font-size: 0.6em;">mo</span></div>
+        <div class="l"><b>Median time</b> from kickoff to first shipped feature on AI engagements.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section data-screen-label="Home / Services">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num"><span class="green">§ 02</span> &nbsp;/&nbsp; SERVICES</div>
+      <div>
+        <h2 class="display">Five ways teams <em>actually</em> work with us.</h2>
+      </div>
+    </div>
+
+    <div class="services-list">
+      <a class="svc-row" href="service-hire.html">
+        <div class="svc-num">SVC.01</div>
+        <div class="svc-name">Hire AI Engineers</div>
+        <div class="svc-desc">Embedded senior engineers, AI-native by default. Live in your stand-ups, ship into your repo. 4&ndash;12 weeks to onboard.</div>
+        <div class="svc-arrow">VIEW SVC.01 →</div>
+      </a>
+      <a class="svc-row" href="services.html">
+        <div class="svc-num">SVC.02</div>
+        <div class="svc-name">AI Product Development</div>
+        <div class="svc-desc">End-to-end AI products. From discovery and architecture through production ops. Owned by a senior eng lead, not a project manager.</div>
+        <div class="svc-arrow">VIEW SVC.02 →</div>
+      </a>
+      <a class="svc-row" href="services.html">
+        <div class="svc-num">SVC.03</div>
+        <div class="svc-name"><span class="green">AI Data Analyst</span> &mdash; flagship product</div>
+        <div class="svc-desc">Presight: governed, zero-hallucination AI analyst that runs on your warehouse. Production-deployed at enterprise scale.</div>
+        <div class="svc-arrow">VIEW SVC.03 →</div>
+      </a>
+      <a class="svc-row" href="services.html">
+        <div class="svc-num">SVC.04</div>
+        <div class="svc-name">Agentic Development</div>
+        <div class="svc-desc">Our internal methodology &mdash; CLAUDE.md, multi-agent workflows, codified evals. We&rsquo;ll teach your team to ship the way we ship.</div>
+        <div class="svc-arrow">VIEW SVC.04 →</div>
+      </a>
+      <a class="svc-row" href="services.html">
+        <div class="svc-num">SVC.05</div>
+        <div class="svc-name">Cloud Transformation</div>
+        <div class="svc-desc">AWS Advanced Partner with GenAI competency. Greenfield to migration to FinOps. Done by people who&rsquo;ve carried the pager.</div>
+        <div class="svc-arrow">VIEW SVC.05 →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRODUCTS ============ -->
+<section data-screen-label="Home / Products">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num"><span class="green">§ 03</span> &nbsp;/&nbsp; PRODUCTS WE&rsquo;VE BUILT</div>
+      <div>
+        <h2 class="display">Two products, in production, <em>built by this team.</em></h2>
+        <p style="margin-top: 16px; color: var(--text-2); font-size: 15px; max-width: 620px;">
+          We don&rsquo;t just deliver client projects. We ship our own products in the same domains we sell into &mdash;
+          which is how we know production AI works at enterprise scale, not just in a slide deck.
+        </p>
+      </div>
+    </div>
+
+    <div class="products-grid">
+      <!-- PRESIGHT -->
+      <article class="product-card">
+        <div class="head">
+          <div>
+            <span class="tag green">FLAGSHIP · DATA &amp; ANALYTICS</span>
+            <div class="name" style="margin-top: 14px;">Presight<span class="green">.</span></div>
+            <div class="mono" style="font-size: 11px; color: var(--text-3); letter-spacing: 0.06em; margin-top: 4px;">presight.io</div>
+          </div>
+        </div>
+        <p class="desc">
+          The AI Data Analyst that runs on <em>your</em> verified metrics. Zero hallucinations,
+          full governance, deployed in your VPC. Used by enterprises with hundreds of analysts and SMEs with zero data team.
+        </p>
+        <div class="product-viz" aria-hidden="true">
+          <div class="row"><span>QUERY: revenue.q4_2025 by region</span><span class="v">RUNNING</span></div>
+          <div class="bar"><span style="width: 78%;"></span></div>
+          <div class="row"><span>verified_metric ✓ access_check ✓</span><span class="v b">$4.2M</span></div>
+          <div class="row"><span>hallucination_rate</span><span class="v">0.00%</span></div>
+        </div>
+        <ul class="features">
+          <li>Runs only on certified definitions &mdash; no freehand SQL</li>
+          <li>Row + column-level security on every query</li>
+          <li>Deploys in your VPC; data never moves</li>
+        </ul>
+        <div class="footer">
+          <span class="mono" style="font-size: 11px; color: var(--text-3);">LIVWELL · METUB · 1,000+ users</span>
+          <a class="visit" href="https://www.presight.io" target="_blank" rel="noopener">VISIT PRESIGHT.IO ↗</a>
+        </div>
+      </article>
+
+      <!-- PROMVIS -->
+      <article class="product-card">
+        <div class="head">
+          <div>
+            <span class="tag green">PRODUCT · FINANCIAL DATA INFRA</span>
+            <div class="name" style="margin-top: 14px;">Promvis<span class="green">.</span></div>
+            <div class="mono" style="font-size: 11px; color: var(--text-3); letter-spacing: 0.06em; margin-top: 4px;">promvis.io &nbsp;·&nbsp; vietnam securities</div>
+          </div>
+        </div>
+        <p class="desc">
+          Vietnam&rsquo;s financial data infrastructure, rebuilt for the AI era &mdash; the first platform purpose-built
+          for IFRS compliance, real-time market data, and AI-powered analysis for Vietnam&rsquo;s securities firms.
+          <b style="color: var(--text);">Other vendors give you raw data. Promvis gives you answers.</b>
+        </p>
+        <div class="promvis-viz" aria-hidden="true">
+          <div style="display: flex; justify-content: space-between;"><span>VAS → IFRS · live</span><span style="color: var(--green);">● 90%+ BASELINE</span></div>
+          <div class="promvis-nodes">
+            <svg viewBox="0 0 300 90" preserveAspectRatio="none">
+              <text x="14" y="34" fill="#6b6b6b" font-size="9" font-family="JetBrains Mono">VAS</text>
+              <text x="138" y="18" fill="#6b6b6b" font-size="9" font-family="JetBrains Mono">map</text>
+              <text x="138" y="78" fill="#81C828" font-size="9" font-family="JetBrains Mono">HITL</text>
+              <text x="248" y="34" fill="#f5f5f5" font-size="9" font-family="JetBrains Mono">IFRS</text>
+              <line x1="40" y1="30" x2="100" y2="30" stroke="#2d2d2d" stroke-width="1"/>
+              <line x1="100" y1="30" x2="180" y2="60" stroke="#81C828" stroke-width="1"/>
+              <line x1="100" y1="30" x2="180" y2="20" stroke="#2d2d2d" stroke-width="1"/>
+              <line x1="180" y1="20" x2="260" y2="40" stroke="#2d2d2d" stroke-width="1"/>
+              <line x1="180" y1="60" x2="260" y2="40" stroke="#81C828" stroke-width="1"/>
+              <circle cx="40" cy="30" r="4" fill="#81C828"/>
+              <circle cx="100" cy="30" r="4" fill="#81C828"/>
+              <circle cx="180" cy="20" r="4" fill="#3f3f3f"/>
+              <circle cx="180" cy="60" r="4" fill="#81C828"/>
+              <circle cx="260" cy="40" r="4" fill="#f5f5f5"/>
+            </svg>
+          </div>
+          <div style="display: flex; justify-content: space-between;"><span>3 days &rarr; <span style="color: var(--green);">3 seconds</span></span><span style="color: var(--green);">verified</span></div>
+        </div>
+        <ul class="features">
+          <li><b style="color: var(--text);">AI-powered IFRS engine</b> &mdash; auto-converts VAS statements with 90%+ baseline accuracy + streamlined human-in-the-loop review</li>
+          <li><b style="color: var(--text);">Real-time market data API</b> &mdash; low-latency live + historical feed across all ~800 listed and ~400 UPCoM securities, drop-in for legacy feeds</li>
+          <li><b style="color: var(--text);">Natural-language financial analysis</b> &mdash; query company financials in Vietnamese; bypass dashboards and SQL, get verified data points instantly</li>
+        </ul>
+        <div class="footer">
+          <span class="mono" style="font-size: 11px; color: var(--text-3);">VN SECURITIES FIRMS · ACTIVE</span>
+          <a class="visit" href="https://promvis.io" target="_blank" rel="noopener">VISIT PROMVIS.IO ↗</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CASE STUDIES ============ -->
+<section data-screen-label="Home / Case studies">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num"><span class="green">§ 04</span> &nbsp;/&nbsp; SELECTED WORK</div>
+      <div>
+        <h2 class="display">Engineering write-ups, <em>not brochures.</em></h2>
+        <p style="margin-top: 16px; color: var(--text-2); font-size: 15px; max-width: 580px;">
+          Each one reads like a postmortem: problem, architecture, outcome. With named engineers, real metrics, and the trade-offs we made.
+        </p>
+      </div>
+    </div>
+
+    <div class="cases-grid">
+      <a class="case-card featured" href="case-study.html">
+        <div class="meta">
+          <span>CASE.01 · CAPITAL MARKETS</span>
+          <span class="mono" style="color: var(--green);">FEATURED</span>
+        </div>
+        <div class="name">TPS Securities &mdash; <em>AI in every investing touchpoint.</em></div>
+        <div class="desc">
+          We co-launched TPS Mobile AI with Tien Phong Securities &mdash; a multi-agent investment assistant
+          embedded across the trading flow. Now serving 200k+ retail investors.
+        </div>
+        <div class="stats">
+          <div class="stat"><span class="n">200K+</span><span class="l">USERS</span></div>
+          <div class="stat"><span class="n">12</span><span class="l">AGENTS</span></div>
+          <div class="stat"><span class="n">9mo</span><span class="l">TO PROD</span></div>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="case-card" href="case-study.html">
+        <div class="meta">
+          <span>CASE.02 · ENERGY</span>
+          <span class="mono">2025</span>
+        </div>
+        <div class="name">Vietsovpetro &mdash; <em>drilling-platform AI.</em></div>
+        <div class="desc">
+          Industrial AI for offshore drilling operations. Real-time anomaly detection on rig sensor streams.
+        </div>
+        <div class="stats">
+          <div class="stat"><span class="n">14</span><span class="l">RIGS</span></div>
+          <div class="stat"><span class="n">99.9%</span><span class="l">UPTIME</span></div>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="case-card" href="case-study.html">
+        <div class="meta">
+          <span>CASE.03 · BANKING</span>
+          <span class="mono">2024</span>
+        </div>
+        <div class="name">TPBank &mdash; <em>core banking, AI-augmented.</em></div>
+        <div class="desc">
+          Modernized fraud detection and credit decisioning on Vietnam&rsquo;s most aggressive digital bank.
+        </div>
+        <div class="stats">
+          <div class="stat"><span class="n">3.2M</span><span class="l">TXN/DAY</span></div>
+          <div class="stat"><span class="n">42%</span><span class="l">FRAUD ↓</span></div>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+
+    <div style="margin-top: 32px; display: flex; justify-content: flex-end;">
+      <a class="btn btn-ghost" href="work.html">VIEW ALL CASE STUDIES <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MISSION ============ -->
+<section class="mission" data-screen-label="Home / Mission">
+  <div class="wrap">
+    <div class="eyebrow muted" style="justify-content: center; display: inline-flex;">§ 05 &nbsp;/&nbsp; MISSION</div>
+    <p class="quote">
+      We&rsquo;re here to prove that <span class="green">Vietnamese engineers,</span> empowered by&nbsp;AI, can build the systems that <em>run the world&rsquo;s most demanding industries.</em>
+    </p>
+    <div class="attrib">— THE FOUNDING TEAM · HCMC + HANOI</div>
+  </div>
+</section>
+
+<!-- ============ INSIGHTS ============ -->
+<section data-screen-label="Home / Writing">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num"><span class="green">§ 06</span> &nbsp;/&nbsp; WRITING</div>
+      <div>
+        <h2 class="display">Long-form on the <em>practice</em> of building AI.</h2>
+      </div>
+    </div>
+
+    <div class="insights-grid">
+      <article class="post">
+        <div class="meta"><span class="green">PLAYBOOK</span><span>2026.04</span><span>11 MIN</span></div>
+        <h4>Why &ldquo;AI-First&rdquo; doesn&rsquo;t mean much anymore &mdash; and what to look for instead</h4>
+        <div class="author"><span>NGUYEN, Co-founder</span><span>READ →</span></div>
+      </article>
+      <article class="post">
+        <div class="meta"><span class="green">FIELD NOTE</span><span>2026.03</span><span>8 MIN</span></div>
+        <h4>Vietnam vs India: the actual differences when you&rsquo;re hiring AI engineers in 2026</h4>
+        <div class="author"><span>LE, Head of Eng</span><span>READ →</span></div>
+      </article>
+      <article class="post">
+        <div class="meta"><span class="green">TECH</span><span>2026.02</span><span>14 MIN</span></div>
+        <h4>CLAUDE.md, codified evals, and the agentic workflow we use to ship every PR</h4>
+        <div class="author"><span>TRAN, Staff Eng</span><span>READ →</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section style="padding: 0; border-bottom: none;" id="contact" data-screen-label="Home / CTA">
+  <div class="cta-split">
+    <div class="cta-pane">
+      <div class="eyebrow">▸ FOR HIRING TEAMS</div>
+      <h3>Embed senior AI engineers in <em>your team,</em> next sprint.</h3>
+      <p>Pre-vetted, AI-native, working in your timezone window. Average ramp: under three weeks.</p>
+      <a class="btn btn-primary" href="contact.html#hire">BOOK A HIRING CALL <span class="arrow">→</span></a>
+    </div>
+    <div class="cta-pane">
+      <div class="eyebrow muted">▸ FOR PRODUCT TEAMS</div>
+      <h3>Have an AI product idea? <em>Let&rsquo;s scope it.</em></h3>
+      <p>Free 45-minute architecture review with a senior engineer. We&rsquo;ll tell you whether we&rsquo;re the right team &mdash; and if not, who is.</p>
+      <a class="btn btn-ghost" href="contact.html#build">SCOPE A PRODUCT <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<div id="cp-foot"></div>
+
+<script src="shared.js"></script>
+<script>
+  CP.mount("index.html");
+
+  // ============ AGENT DEMO ============
+  const ANSWERS = {
+    why: {
+      thinking: [
+        { icon: "▸", text: "Planning answer · selecting <b>3 sources</b>", src: "" },
+        { icon: "▸", text: "Searching <b>case_studies/tps</b>", src: "TPS" },
+        { icon: "▸", text: "Searching <b>case_studies/tpbank</b>", src: "TPBANK" },
+        { icon: "▸", text: "Cross-referencing <b>methodology/agentic</b>", src: "AGENTIC.md" },
+        { icon: "▸", text: "Synthesizing answer", src: "" },
+      ],
+      answer: [
+        "Two things. First — we ship our own AI products. <b>Presight</b> and <b>Promvis</b> are in production with real enterprises and SMEs. We sell capabilities we've already proven on our own balance sheet.",
+        "Second — the engineers are AI-native by default. CLAUDE.md, codified evals, agentic workflows aren't buzzwords for us; they're how every PR gets shipped. Most offshore shops are still selling 2019 staff aug.",
+      ],
+      cites: ["§ presight.io", "§ promvis.io", "§ case/tps", "§ method/agentic"],
+    },
+    banking: {
+      thinking: [
+        { icon: "▸", text: "Planning answer", src: "" },
+        { icon: "▸", text: "Loading <b>case_studies/tpbank</b>", src: "TPBANK" },
+        { icon: "▸", text: "Loading <b>compliance/sbv-handbook</b>", src: "SBV" },
+        { icon: "▸", text: "Synthesizing", src: "" },
+      ],
+      answer: [
+        "Same way we did at <b>TPBank</b>: AI augments — never replaces — the deterministic core. Every model output is auditable, rate-limited, and routed through compliance gates before it touches a transaction.",
+        "We deploy in-VPC, never train on customer data, and keep model decisions logged for SBV review. The bank, not the vendor, owns the audit trail.",
+      ],
+      cites: ["§ case/tpbank", "§ compliance/sbv", "§ arch/in-vpc"],
+    },
+    hire: {
+      thinking: [
+        { icon: "▸", text: "Loading <b>service/hire</b>", src: "HIRE.md" },
+        { icon: "▸", text: "Pulling current bench availability", src: "" },
+        { icon: "▸", text: "Synthesizing", src: "" },
+      ],
+      answer: [
+        "Yes — embedded is our default mode. Engineers join your stand-ups, your Slack, your repo. They report to your tech lead, not ours.",
+        "Average ramp is under <b>three weeks</b>. Minimum engagement six weeks. We staff in 4-hour overlap windows with US East / EU West / APAC.",
+      ],
+      cites: ["§ service/hire", "§ ops/timezones"],
+    },
+    data: {
+      thinking: [
+        { icon: "▸", text: "Loading <b>products/presight</b>", src: "PRESIGHT" },
+        { icon: "▸", text: "Pulling deployment refs", src: "LIVWELL · METUB" },
+        { icon: "▸", text: "Synthesizing", src: "" },
+      ],
+      answer: [
+        "<b>Presight</b> is an AI Data Analyst that runs only on your verified metrics. No freehand SQL, no hallucinated numbers — every answer traces back to a definition you certified.",
+        "It deploys in your VPC, respects your row- and column-level access, and works directly on your warehouse. Used by enterprises with 1,000+ governed users and SMEs with zero data team.",
+      ],
+      cites: ["§ presight.io", "§ case/livwell", "§ case/metub"],
+    },
+  };
+
+  const select = document.getElementById("agent-q-select");
+  const thinking = document.getElementById("agent-thinking");
+  const text = document.getElementById("agent-text");
+  const cites = document.getElementById("agent-cites");
+  const replay = document.getElementById("agent-replay");
+
+  let cancelled = false;
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  async function runAgent(key) {
+    cancelled = true;
+    await sleep(50);
+    cancelled = false;
+    const myToken = Symbol();
+    runAgent.token = myToken;
+
+    const data = ANSWERS[key];
+    thinking.innerHTML = "";
+    text.innerHTML = "";
+    cites.innerHTML = "";
+
+    // Render thinking steps
+    for (const s of data.thinking) {
+      if (runAgent.token !== myToken) return;
+      const el = document.createElement("div");
+      el.className = "step";
+      el.innerHTML = `<span class="icon">${s.icon}</span><span>${s.text}${s.src ? `<span class="src">${s.src}</span>` : ""}</span>`;
+      thinking.appendChild(el);
+      requestAnimationFrame(() => el.classList.add("shown"));
+      await sleep(400);
+    }
+
+    if (runAgent.token !== myToken) return;
+    await sleep(300);
+
+    // Type out answer
+    let fullText = data.answer.join("\n\n");
+    let i = 0;
+    text.innerHTML = "";
+    while (i < fullText.length) {
+      if (runAgent.token !== myToken) return;
+      const ch = fullText[i];
+      if (ch === "<") {
+        // copy entire tag atomically
+        const end = fullText.indexOf(">", i);
+        text.innerHTML += fullText.slice(i, end + 1);
+        i = end + 1;
+        continue;
+      }
+      if (ch === "&") {
+        // copy entire HTML entity atomically (e.g. &mdash; &rsquo; &amp;)
+        const end = fullText.indexOf(";", i);
+        if (end > i && end - i < 10) {
+          text.innerHTML += fullText.slice(i, end + 1);
+          i = end + 1;
+          await sleep(8);
+          continue;
+        }
+      }
+      if (ch === "\n") {
+        text.innerHTML += "<br/><br/>";
+        i++;
+        await sleep(120);
+        continue;
+      }
+      text.innerHTML += ch;
+      i++;
+      await sleep(8);
+    }
+
+    // Citations
+    if (runAgent.token !== myToken) return;
+    await sleep(200);
+    data.cites.forEach((c, ix) => {
+      setTimeout(() => {
+        if (runAgent.token !== myToken) return;
+        const el = document.createElement("a");
+        el.className = "src"; el.href = "#"; el.textContent = c;
+        cites.appendChild(el);
+      }, ix * 80);
+    });
+  }
+
+  select.addEventListener("change", e => runAgent(e.target.value));
+  replay.addEventListener("click", () => runAgent(select.value));
+  // initial run after small delay
+  setTimeout(() => runAgent("why"), 600);
+</script>
+</body>
+</html>

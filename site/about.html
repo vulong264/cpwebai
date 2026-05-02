@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CoderPush — About</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="shared.css" />
+<style>
+  .ab-hero { padding: 72px 0 56px; border-bottom: 1px solid var(--line); }
+  .ab-hero h1 { font-size: clamp(40px, 5.4vw, 84px); line-height: 0.98; letter-spacing: -0.035em; font-weight: 500; max-width: 1100px; margin-top: 28px; }
+  .ab-hero h1 em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400; }
+  .ab-hero h1 .green { color: var(--green); }
+  .ab-hero .lede { margin-top: 28px; max-width: 720px; font-size: 17px; color: var(--text-2); line-height: 1.65; }
+  .ab-meta { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); margin-top: 48px; }
+  @media (max-width: 720px) { .ab-meta { grid-template-columns: 1fr 1fr; } }
+  .ab-meta .cell { padding: 18px 18px 18px 0; border-right: 1px solid var(--line); }
+  .ab-meta .cell:last-child { border-right: none; }
+  .ab-meta .k { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+  .ab-meta .v { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text); }
+  .ab-meta .v .green { color: var(--green); }
+
+  section.s { padding: 80px 0; border-bottom: 1px solid var(--line); }
+  .head-row { display: grid; grid-template-columns: 220px 1fr; gap: 48px; margin-bottom: 40px; }
+  @media (max-width: 720px) { .head-row { grid-template-columns: 1fr; gap: 12px; } }
+  .head-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.1em; }
+  .head-num .green { color: var(--green); }
+  h2.s-title { font-size: clamp(28px, 3.4vw, 44px); line-height: 1.08; letter-spacing: -0.02em; font-weight: 500; max-width: 760px; text-wrap: balance; }
+  h2.s-title em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400; }
+  h2.s-title .green { color: var(--green); }
+
+  .prose p { color: var(--text-2); font-size: 16px; line-height: 1.7; max-width: 760px; text-wrap: pretty; }
+  .prose p + p { margin-top: 14px; }
+  .prose p b { color: var(--text); font-weight: 500; }
+  .prose p .green { color: var(--green); }
+
+  .principles { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  @media (max-width: 720px) { .principles { grid-template-columns: 1fr; } }
+  .principle { padding: 28px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .principle .num { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--green); letter-spacing: 0.12em; margin-bottom: 12px; }
+  .principle h3 { font-size: 20px; font-weight: 500; letter-spacing: -0.015em; margin-bottom: 10px; line-height: 1.2; }
+  .principle h3 em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400; }
+  .principle p { color: var(--text-2); font-size: 14px; line-height: 1.6; }
+  .principle p b { color: var(--text); font-weight: 500; }
+
+  .timeline { list-style: none; border-top: 1px solid var(--line); }
+  .timeline li { display: grid; grid-template-columns: 110px 1fr; gap: 32px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+  @media (max-width: 600px) { .timeline li { grid-template-columns: 1fr; gap: 6px; } }
+  .timeline .y { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--green); letter-spacing: 0.06em; padding-top: 4px; }
+  .timeline .what { color: var(--text-2); font-size: 15px; line-height: 1.6; max-width: 720px; }
+  .timeline .what b { color: var(--text); font-weight: 500; }
+
+  .leaders { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 900px) { .leaders { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .leaders { grid-template-columns: 1fr; } }
+  .leader { border: 1px solid var(--line); padding: 22px; background: var(--bg-1); }
+  .leader .av { width: 56px; height: 56px; border: 1px solid var(--line-2); display: grid; place-items: center; font-family: 'JetBrains Mono', monospace; font-size: 18px; color: var(--green); margin-bottom: 16px; }
+  .leader h4 { font-size: 17px; font-weight: 500; letter-spacing: -0.01em; }
+  .leader .role { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.06em; margin-top: 4px; }
+  .leader p { color: var(--text-2); font-size: 13px; line-height: 1.55; margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line-2); }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  @media (max-width: 720px) { .stats { grid-template-columns: 1fr 1fr; } }
+  .stats .stat { padding: 28px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .stats .n { font-family: 'JetBrains Mono', monospace; font-size: clamp(28px, 3.2vw, 44px); color: var(--green); line-height: 1; margin-bottom: 10px; letter-spacing: -0.01em; font-weight: 500; }
+  .stats .l { color: var(--text-2); font-size: 12px; line-height: 1.5; }
+  .stats .l b { color: var(--text); font-weight: 500; }
+
+  .cta-strip { border: 1px solid var(--line); background: var(--bg-1); padding: 40px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; margin-top: 48px; }
+  @media (max-width: 720px) { .cta-strip { grid-template-columns: 1fr; padding: 28px; } }
+  .cta-strip h3 { font-size: 26px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; max-width: 540px; }
+  .cta-strip h3 em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400; }
+  .cta-strip h3 .green { color: var(--green); }
+</style>
+</head>
+<body data-screen-label="09 About">
+<div id="cp-nav"></div>
+
+<header class="ab-hero grid-bg">
+  <div class="wrap">
+    <div class="crumb"><a href="index.html">~</a><span class="sep">/</span><span class="here">about</span></div>
+    <div class="eyebrow">ABOUT · WHO WE ARE, WHY WE EXIST</div>
+    <h1>An <em>engineering company</em> that ships its own AI products &mdash; <span class="green">and helps you ship yours.</span></h1>
+    <p class="lede">CoderPush is 80 engineers across Ho Chi Minh City and Hanoi, with 20 of them working AI-native by default. We&rsquo;re an AWS Advanced Partner with the GenAI Software Competency. We&rsquo;ve served 60+ clients worldwide. We sell what we&rsquo;ve already proven on our own balance sheet.</p>
+    <div class="ab-meta">
+      <div class="cell"><div class="k">FOUNDED</div><div class="v">2020 · Ho Chi Minh City</div></div>
+      <div class="cell"><div class="k">ENGINEERS</div><div class="v"><span class="green">80</span> · 20 AI-native</div></div>
+      <div class="cell"><div class="k">CLIENTS</div><div class="v"><span class="green">60+</span> worldwide</div></div>
+      <div class="cell"><div class="k">PARTNERS</div><div class="v">AWS Advanced · GenAI</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== STORY ===== -->
+<section class="s">
+  <div class="wrap">
+    <div class="head-row">
+      <div class="head-num"><span class="green">§ 01</span> &nbsp;/&nbsp; ORIGIN</div>
+      <h2 class="s-title">We started in 2020 building <em>real products,</em> not selling timesheets.</h2>
+    </div>
+    <div class="prose">
+      <p>CoderPush began as a product studio in Ho Chi Minh City. Our first paying year was spent shipping consumer apps under our own brand &mdash; learning what production actually costs when you&rsquo;re both the engineer and the customer.</p>
+      <p>That backbone never left. Today we run two AI products of our own &mdash; <b>Presight</b>, a governed AI Data Analyst, and <b>Promvis</b>, Vietnam&rsquo;s financial data infrastructure rebuilt for the AI era. Everything we sell to clients, we&rsquo;ve already shipped on our own platforms first.</p>
+      <p>We&rsquo;re an <b class="green">AWS Advanced Partner with the Generative AI Software Competency</b> &mdash; one of a small set of firms in Southeast Asia certified to build AI in production for regulated industries.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STATS ===== -->
+<section class="s">
+  <div class="wrap">
+    <div class="head-row">
+      <div class="head-num"><span class="green">§ 02</span> &nbsp;/&nbsp; BY THE NUMBERS</div>
+      <h2 class="s-title">Twelve years &mdash; <em>compounding.</em></h2>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="n">2020</div><div class="l"><b>Founded</b><br/>Ho Chi Minh City</div></div>
+      <div class="stat"><div class="n">80</div><div class="l"><b>Engineers</b><br/>HCMC + Hanoi</div></div>
+      <div class="stat"><div class="n">20</div><div class="l"><b>AI-native engineers</b><br/>shipping agentic systems</div></div>
+      <div class="stat"><div class="n">60+</div><div class="l"><b>Clients worldwide</b><br/>VN, US, EU, APAC</div></div>
+      <div class="stat"><div class="n">2</div><div class="l"><b>Own AI products</b><br/>Presight &middot; Promvis</div></div>
+      <div class="stat"><div class="n">5</div><div class="l"><b>AI systems</b><br/>in production</div></div>
+      <div class="stat"><div class="n">1.2M+</div><div class="l"><b>End users reached</b><br/>via shipped products</div></div>
+      <div class="stat"><div class="n">AWS</div><div class="l"><b>Advanced Partner</b><br/>GenAI Competency</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRINCIPLES ===== -->
+<section class="s">
+  <div class="wrap">
+    <div class="head-row">
+      <div class="head-num"><span class="green">§ 03</span> &nbsp;/&nbsp; PRINCIPLES</div>
+      <h2 class="s-title">Six things we <em>actually believe.</em></h2>
+    </div>
+    <div class="principles">
+      <div class="principle">
+        <div class="num">▸ 01</div>
+        <h3>Ship our own <em>before</em> we sell yours.</h3>
+        <p>We don&rsquo;t take an AI engagement on unless we&rsquo;ve solved the analogous problem on Presight or Promvis. <b>Our products are our R&amp;D.</b></p>
+      </div>
+      <div class="principle">
+        <div class="num">▸ 02</div>
+        <h3>The model is rarely the hard part.</h3>
+        <p>Compliance gates, eval suites, deployment topology, audit logs &mdash; this is where projects fail. We design backwards from production, not from the demo.</p>
+      </div>
+      <div class="principle">
+        <div class="num">▸ 03</div>
+        <h3>Senior engineers, <em>or none.</em></h3>
+        <p>Every engagement starts with a senior engineer reading your problem &mdash; no SDR, no junior bait-and-switch. If we can&rsquo;t staff senior, we tell you.</p>
+      </div>
+      <div class="principle">
+        <div class="num">▸ 04</div>
+        <h3>VPC by default. Customer data, customer perimeter.</h3>
+        <p>Every banking client we work with runs inference inside their AWS account or on-prem. Your data is yours. The audit trail is yours.</p>
+      </div>
+      <div class="principle">
+        <div class="num">▸ 05</div>
+        <h3>Postmortems, <em>not pitch decks.</em></h3>
+        <p>Our case studies name engineers, list trade-offs, and admit what we&rsquo;d do differently. The same writing standard applies internally.</p>
+      </div>
+      <div class="principle">
+        <div class="num">▸ 06</div>
+        <h3>Walk away if we&rsquo;re wrong for the job.</h3>
+        <p>If a project needs a research lab, an in-house team, or a different vendor, we say so on the first call. Long-term reputation beats this quarter&rsquo;s booking.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TIMELINE ===== -->
+<section class="s">
+  <div class="wrap">
+    <div class="head-row">
+      <div class="head-num"><span class="green">§ 04</span> &nbsp;/&nbsp; TRAJECTORY</div>
+      <h2 class="s-title">From product studio to <em>regulated AI partner.</em></h2>
+    </div>
+    <ul class="timeline">
+      <li><span class="y">2020</span><span class="what"><b>Founded</b> in Ho Chi Minh City as a product studio. First year: own consumer apps and embedded pods.</span></li>
+      <li><span class="y">2021</span><span class="what"><b>First enterprise client.</b> Pivoted to senior-only engineering pods. Hanoi office opened.</span></li>
+      <li><span class="y">2022</span><span class="what"><b>30 engineers.</b> First fintech engagement &mdash; payment infrastructure for an APAC scale-up.</span></li>
+      <li><span class="y">2023</span><span class="what"><b>Presight launched</b> as our first own AI product &mdash; a governed AI data analyst running only on certified metrics.</span></li>
+      <li><span class="y">2024</span><span class="what"><b>AWS Advanced Partner with GenAI Software Competency.</b> First banking AI engagement (TPBank).</span></li>
+      <li><span class="y">2025</span><span class="what"><b>Promvis launched</b> &mdash; Vietnam&rsquo;s financial data infrastructure rebuilt for AI. <b>TPS Mobile AI</b> went live with 200K+ retail traders.</span></li>
+      <li><span class="y">2026</span><span class="what"><b>80 engineers, 20 AI-native, 60+ clients worldwide.</b> Now hiring senior AI engineers in HCMC, Hanoi, and remote.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== LEADERS ===== -->
+<section class="s">
+  <div class="wrap">
+    <div class="head-row">
+      <div class="head-num"><span class="green">§ 05</span> &nbsp;/&nbsp; LEADERSHIP</div>
+      <h2 class="s-title">The people <em>accountable.</em></h2>
+    </div>
+    <div class="leaders">
+      <div class="leader">
+        <div class="av">HT</div>
+        <h4>Hung Tran</h4>
+        <div class="role">CO-FOUNDER · CEO</div>
+        <p>Twelve years building product studios in SE Asia. Owns the relationship with every banking client we serve. Ex-product engineer.</p>
+      </div>
+      <div class="leader">
+        <div class="av">NL</div>
+        <h4>Nguyen Long</h4>
+        <div class="role">CO-FOUNDER · HEAD OF ENG</div>
+        <p>Owns the engineering bar across all 80 engineers. Author of the CoderPush <b>CLAUDE.md</b> standard. Shipped the TPS compliance gate.</p>
+      </div>
+      <div class="leader">
+        <div class="av">PT</div>
+        <h4>Pham Thu</h4>
+        <div class="role">VP · DATA &amp; AI</div>
+        <p>Leads Presight engineering and the data practice. Background: large-scale data engineering at Vietnamese fintech.</p>
+      </div>
+      <div class="leader">
+        <div class="av">VK</div>
+        <h4>Vo Khanh</h4>
+        <div class="role">PRINCIPAL · INFERENCE</div>
+        <p>Self-hosted Vietnamese model fine-tunes (Qwen-VN, Llama-VN). Holds the budget for our research-spike work on vernacular AI.</p>
+      </div>
+      <div class="leader">
+        <div class="av">LH</div>
+        <h4>Le Huong</h4>
+        <div class="role">VP · DELIVERY</div>
+        <p>Runs phased rollouts for regulated clients. Compliance liaison on banking and capital-markets engagements.</p>
+      </div>
+      <div class="leader">
+        <div class="av">BT</div>
+        <h4>Bui Tan</h4>
+        <div class="role">HEAD OF DESIGN PARTNERSHIPS</div>
+        <p>Works with anchor customers from discovery through GA. Owns the shape of new engagements before engineering picks them up.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="s" style="border-bottom: none;">
+  <div class="wrap">
+    <div class="cta-strip">
+      <h3>Want to <em>work with us?</em> &nbsp;Or <em>work for us?</em> <span class="green">Both doors are open.</span></h3>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <a class="btn btn-primary" href="contact.html#build">▸ START A PROJECT</a>
+        <a class="btn btn-ghost" href="contact.html#hire">JOIN THE TEAM →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="cp-foot"></div>
+<script src="shared.js"></script>
+<script>CP.mount("about.html");</script>
+</body>
+</html>

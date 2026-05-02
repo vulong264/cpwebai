@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CoderPush — Industries</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="shared.css" />
+<style>
+  .ind-hero { padding: 72px 0 56px; border-bottom: 1px solid var(--line); }
+  .ind-hero h1 { font-size: clamp(40px, 5.4vw, 80px); line-height: 1.0; letter-spacing: -0.035em; font-weight: 500; max-width: 1000px; margin-top: 28px; }
+  .ind-hero h1 em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400; }
+  .ind-hero h1 .green { color: var(--green); }
+  .ind-hero .lede { margin-top: 28px; max-width: 720px; font-size: 17px; color: var(--text-2); line-height: 1.65; }
+
+  .ind-grid { border-top: 1px solid var(--line); }
+  .ind-row {
+    display: grid; grid-template-columns: 80px 1.2fr 1fr 220px;
+    gap: 32px; padding: 36px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+    transition: background 0.15s;
+  }
+  @media (max-width: 900px) { .ind-row { grid-template-columns: 1fr; gap: 12px; padding: 28px 0; } }
+  .ind-row.live:hover { background: rgba(129,200,40,0.025); }
+  .ind-row .num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.1em; padding-top: 4px; }
+  .ind-row.live .num { color: var(--green); }
+  .ind-row h2 { font-size: clamp(26px, 3vw, 40px); line-height: 1.05; letter-spacing: -0.025em; font-weight: 500; }
+  .ind-row h2 em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400; }
+  .ind-row h2 .green { color: var(--green); }
+  .ind-row .meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.06em; margin-top: 12px; display: flex; gap: 14px; flex-wrap: wrap; }
+  .ind-row .meta b { color: var(--text); font-weight: 500; }
+  .ind-row p { color: var(--text-2); font-size: 14px; line-height: 1.6; }
+  .ind-row p b { color: var(--text); font-weight: 500; }
+  .ind-row .cta { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; padding-top: 8px; }
+  .ind-row .cta a { color: var(--green); display: inline-flex; align-items: center; gap: 6px; }
+  .ind-row.dim { opacity: 0.55; }
+  .ind-row.dim .cta { color: var(--text-3); }
+</style>
+</head>
+<body data-screen-label="07 Industries">
+<div id="cp-nav"></div>
+
+<header class="ind-hero grid-bg">
+  <div class="wrap">
+    <div class="crumb"><a href="index.html">~</a><span class="sep">/</span><span class="here">industries</span></div>
+    <div class="eyebrow">INDUSTRIES · WHERE WE&rsquo;VE SHIPPED</div>
+    <h1>We don&rsquo;t pretend to be <em>industry-agnostic.</em> <span class="green">Here&rsquo;s where we&rsquo;ve shipped.</span></h1>
+    <p class="lede">Six industries with reference customers in production. Three more we&rsquo;ve done discovery work in. If your sector isn&rsquo;t here, we&rsquo;ll tell you on the first call.</p>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="ind-grid">
+    <a class="ind-row live" href="industry-banking.html">
+      <div class="num">▸ 01</div>
+      <div>
+        <h2>Banking &amp; <em>capital markets</em></h2>
+        <div class="meta"><span><b>TPBank</b> · core banking</span><span><b>TPS</b> · brokerage</span><span>SBV · MAS · HKMA</span></div>
+      </div>
+      <p>VPC-native deployments, deterministic compliance gates, Vietnamese-vernacular fine-tunes. <b>1.2M+ end users reached.</b></p>
+      <div class="cta"><a href="industry-banking.html">▸ READ PLAYBOOK →</a></div>
+    </a>
+    <div class="ind-row dim">
+      <div class="num">▸ 02</div>
+      <div>
+        <h2>Healthcare &amp; <em>pharma</em></h2>
+        <div class="meta"><span>HIPAA &middot; on-prem</span><span>clinical workflows</span></div>
+      </div>
+      <p>Clinical decision support and document AI under HIPAA. Reference customers under NDA &mdash; available on call.</p>
+      <div class="cta">▸ ON REQUEST</div>
+    </div>
+    <div class="ind-row dim">
+      <div class="num">▸ 03</div>
+      <div>
+        <h2>Energy &amp; <em>utilities</em></h2>
+        <div class="meta"><span>SCADA bridges</span><span>load forecasting</span></div>
+      </div>
+      <p>AI overlays for grid operations and asset reliability. Two production deployments in SE Asia.</p>
+      <div class="cta">▸ ON REQUEST</div>
+    </div>
+    <div class="ind-row dim">
+      <div class="num">▸ 04</div>
+      <div>
+        <h2>Retail &amp; <em>e-commerce</em></h2>
+        <div class="meta"><span>METUB · Livwell</span><span>governed analytics</span></div>
+      </div>
+      <p>Presight-powered AI data analyst for merchandising and ops. 1,000+ governed users.</p>
+      <div class="cta">▸ ON REQUEST</div>
+    </div>
+    <div class="ind-row dim">
+      <div class="num">▸ 05</div>
+      <div>
+        <h2>Logistics &amp; <em>mobility</em></h2>
+        <div class="meta"><span>last-mile</span><span>routing &amp; ops</span></div>
+      </div>
+      <p>Fleet routing copilots, driver-app rewrites, ops-room dashboards. Scale-up references on request.</p>
+      <div class="cta">▸ ON REQUEST</div>
+    </div>
+    <div class="ind-row dim">
+      <div class="num">▸ 06</div>
+      <div>
+        <h2>Public sector &amp; <em>edu</em></h2>
+        <div class="meta"><span>VN ministries</span><span>document AI</span></div>
+      </div>
+      <p>Document parsing, vernacular-language assistants, citizen-service portals. Procurement-friendly engagements.</p>
+      <div class="cta">▸ ON REQUEST</div>
+    </div>
+  </div>
+
+  <div style="padding: 56px 0;">
+    <div style="border: 1px solid var(--line); background: var(--bg-1); padding: 40px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center;">
+      <h3 style="font-size: 26px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; max-width: 540px;">Industry not on the list? <em style="font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400;">Tell us anyway</em> &mdash; <span style="color: var(--green);">we&rsquo;ll be honest.</span></h3>
+      <a class="btn btn-primary" href="contact.html#build">▸ START A CONVERSATION</a>
+    </div>
+  </div>
+</div>
+
+<div id="cp-foot"></div>
+<script src="shared.js"></script>
+<script>CP.mount("industries.html");</script>
+</body>
+</html>

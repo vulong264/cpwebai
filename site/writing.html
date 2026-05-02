@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CoderPush — Writing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="shared.css" />
+<style>
+  .wr-hero { padding: 72px 0 48px; border-bottom: 1px solid var(--line); }
+  .wr-hero h1 { font-size: clamp(40px, 5.4vw, 80px); line-height: 1.0; letter-spacing: -0.035em; font-weight: 500; max-width: 1000px; margin-top: 28px; }
+  .wr-hero h1 em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400; }
+  .wr-hero h1 .green { color: var(--green); }
+  .wr-hero .lede { margin-top: 24px; max-width: 680px; font-size: 17px; color: var(--text-2); line-height: 1.65; }
+
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; padding: 24px 0; border-bottom: 1px solid var(--line); }
+  .filter { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.08em; padding: 8px 14px; border: 1px solid var(--line); cursor: pointer; transition: all 0.15s; }
+  .filter:hover { border-color: var(--text-3); color: var(--text); }
+  .filter.on { border-color: var(--green); color: var(--green); background: rgba(129,200,40,0.06); }
+
+  .post-list { border-top: 1px solid var(--line); }
+  .post {
+    display: grid; grid-template-columns: 110px 90px 1fr 240px;
+    gap: 32px; padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+    transition: background 0.15s;
+  }
+  @media (max-width: 900px) { .post { grid-template-columns: 1fr; gap: 8px; padding: 22px 0; } }
+  .post:hover { background: rgba(129,200,40,0.02); }
+  .post .date { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.06em; }
+  .post .tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--green); letter-spacing: 0.1em; }
+  .post h3 { font-size: clamp(20px, 2.2vw, 26px); font-weight: 500; letter-spacing: -0.018em; line-height: 1.2; }
+  .post h3 em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400; }
+  .post h3 .green { color: var(--green); }
+  .post .by { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.04em; }
+  .post .by b { color: var(--text); font-weight: 500; }
+  .post p { color: var(--text-2); font-size: 14px; line-height: 1.6; max-width: 560px; margin-top: 8px; }
+</style>
+</head>
+<body data-screen-label="08 Writing">
+<div id="cp-nav"></div>
+
+<header class="wr-hero grid-bg">
+  <div class="wrap">
+    <div class="crumb"><a href="index.html">~</a><span class="sep">/</span><span class="here">writing</span></div>
+    <div class="eyebrow">WRITING · POSTMORTEMS, NOT THINK-PIECES</div>
+    <h1>Engineering <em>writing</em> from people <span class="green">who shipped the thing.</span></h1>
+    <p class="lede">No vendor-blog SEO. No &ldquo;the future of AI is&hellip;&rdquo; hot-takes. Architecture decisions, eval surprises, on-call lessons &mdash; written by the engineers who lived them.</p>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="filters">
+    <span class="filter on">▸ ALL</span>
+    <span class="filter">AGENT SYSTEMS</span>
+    <span class="filter">COMPLIANCE</span>
+    <span class="filter">EVALS</span>
+    <span class="filter">INFRASTRUCTURE</span>
+    <span class="filter">PRACTICE</span>
+  </div>
+
+  <div class="post-list">
+    <a class="post" href="#">
+      <div><div class="date">2026.04.18</div><div class="tag">▸ COMPLIANCE</div></div>
+      <div></div>
+      <div>
+        <h3>Why <em>LLM-as-judge</em> failed our <span class="green">brokerage compliance gate.</span></h3>
+        <p>96% pass rate sounds good. The 4% is what gets a brokerage fined. How we swapped to a deterministic rule layer + sentence classifier and got to 99.97%.</p>
+      </div>
+      <div class="by">BY <b>NGUYEN LONG</b><br/>STAFF · TPS</div>
+    </a>
+    <a class="post" href="#">
+      <div><div class="date">2026.03.30</div><div class="tag">▸ AGENT SYSTEMS</div></div>
+      <div></div>
+      <div>
+        <h3>Twelve <em>specialist agents</em> beat one big prompt &mdash; <span class="green">every time.</span></h3>
+        <p>The architecture choice that made TPS Mobile AI auditable. Hard-typed I/O, separate eval suites per agent, and how we kept latency under 1.4s p95.</p>
+      </div>
+      <div class="by">BY <b>TRAN MINH</b><br/>SR · GO PLATFORM</div>
+    </a>
+    <a class="post" href="#">
+      <div><div class="date">2026.03.12</div><div class="tag">▸ EVALS</div></div>
+      <div></div>
+      <div>
+        <h3>The <em>100-line eval runner</em> we should have shipped <span class="green">in week one.</span></h3>
+        <p>We spent three weeks on a perfect eval harness before we had three agents to evaluate. Don&rsquo;t do that. Here&rsquo;s the minimum viable harness, and how to grow it.</p>
+      </div>
+      <div class="by">BY <b>VO KHANH</b><br/>SR · INFERENCE</div>
+    </a>
+    <a class="post" href="#">
+      <div><div class="date">2026.02.20</div><div class="tag">▸ INFRASTRUCTURE</div></div>
+      <div></div>
+      <div>
+        <h3>Streaming agents over <em>flaky 4G</em> &mdash; <span class="green">why SSE beat WebSockets.</span></h3>
+        <p>Our first streaming protocol assumed clean WebSockets. Vietnamese retail traffic does not. The day-one design we wish we&rsquo;d had: SSE with reconnect-from-offset.</p>
+      </div>
+      <div class="by">BY <b>DO HIEU</b><br/>SR · REACT NATIVE</div>
+    </a>
+    <a class="post" href="#">
+      <div><div class="date">2026.01.28</div><div class="tag">▸ AGENT SYSTEMS</div></div>
+      <div></div>
+      <div>
+        <h3>Vietnamese <em>vernacular</em> tokenization is a <span class="green">research project, not a stack swap.</span></h3>
+        <p>What we learned self-hosting Qwen-VN. Diacritics, code-switching with English, and why off-the-shelf tokenizers fail on Vietnamese financial text.</p>
+      </div>
+      <div class="by">BY <b>VO KHANH</b><br/>SR · INFERENCE</div>
+    </a>
+    <a class="post" href="#">
+      <div><div class="date">2025.12.14</div><div class="tag">▸ PRACTICE</div></div>
+      <div></div>
+      <div>
+        <h3>Our <em>CLAUDE.md</em> standard &mdash; <span class="green">how every PR ships agentic.</span></h3>
+        <p>The repo file every CoderPush project carries. What goes in it, what doesn&rsquo;t, and why we made it required for every senior engineer.</p>
+      </div>
+      <div class="by">BY <b>HUNG TRAN</b><br/>HEAD OF ENG</div>
+    </a>
+    <a class="post" href="#">
+      <div><div class="date">2025.11.04</div><div class="tag">▸ COMPLIANCE</div></div>
+      <div></div>
+      <div>
+        <h3>VPC-native <em>Bedrock</em> for regulated finance &mdash; <span class="green">a procurement guide.</span></h3>
+        <p>What CISOs ask, what auditors want, and what to put in the data-flow diagram. Distilled from nine banking engagements.</p>
+      </div>
+      <div class="by">BY <b>PHAM THU</b><br/>SR · DATA</div>
+    </a>
+    <a class="post" href="#">
+      <div><div class="date">2025.10.10</div><div class="tag">▸ PRACTICE</div></div>
+      <div></div>
+      <div>
+        <h3>What &ldquo;<em>AI-native</em>&rdquo; actually means &mdash; <span class="green">on a real engineering team.</span></h3>
+        <p>Not a hiring slogan. The five practices &mdash; codified evals, agent harnesses, prompt PRs, replay tests, ops dashboards &mdash; that separate a 2025 team from a 2019 one.</p>
+      </div>
+      <div class="by">BY <b>HUNG TRAN</b><br/>HEAD OF ENG</div>
+    </a>
+  </div>
+
+  <div style="padding: 56px 0;">
+    <div style="border: 1px solid var(--line); background: var(--bg-1); padding: 40px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center;">
+      <h3 style="font-size: 24px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.25; max-width: 560px;">Subscribe to <em style="font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400;">the engineering log.</em> One post a month. <span style="color: var(--green);">No marketing.</span></h3>
+      <form style="display: flex; gap: 10px;" onsubmit="event.preventDefault(); this.querySelector('button').textContent='▸ SUBSCRIBED';">
+        <input type="email" placeholder="you@company.com" required style="background: transparent; border: 1px solid var(--line); padding: 12px 14px; color: var(--text); font: inherit; min-width: 260px;" />
+        <button type="submit" class="btn btn-primary">SUBSCRIBE →</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="cp-foot"></div>
+<script src="shared.js"></script>
+<script>
+  CP.mount("writing.html");
+  document.querySelectorAll('.filter').forEach(f => f.addEventListener('click', () => {
+    document.querySelectorAll('.filter').forEach(x => x.classList.remove('on'));
+    f.classList.add('on');
+  }));
+</script>
+</body>
+</html>

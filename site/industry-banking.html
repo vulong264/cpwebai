@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CoderPush — Banking &amp; Fintech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="shared.css" />
+<style>
+  .ind-hero { padding: 80px 0 64px; border-bottom: 1px solid var(--line); position: relative; }
+  .ind-hero h1 { font-size: clamp(44px, 6vw, 88px); line-height: 0.98; letter-spacing: -0.035em; font-weight: 500; max-width: 1080px; margin-top: 28px; }
+  .ind-hero h1 em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400; }
+  .ind-hero h1 .green { color: var(--green); }
+  .ind-hero .lede { margin-top: 32px; max-width: 720px; font-size: 17px; color: var(--text-2); line-height: 1.65; }
+
+  .stripe { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); margin-top: 48px; }
+  @media (max-width: 720px) { .stripe { grid-template-columns: 1fr 1fr; } }
+  .stripe .cell { padding: 22px 22px 22px 0; border-right: 1px solid var(--line); }
+  .stripe .cell:last-child { border-right: none; }
+  .stripe .k { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+  .stripe .v { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--text); }
+  .stripe .v .green { color: var(--green); }
+
+  section.s { padding: 96px 0; border-bottom: 1px solid var(--line); }
+  .head-row { display: grid; grid-template-columns: 220px 1fr; gap: 48px; margin-bottom: 48px; }
+  @media (max-width: 720px) { .head-row { grid-template-columns: 1fr; gap: 12px; } }
+  .head-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.1em; }
+  .head-num .green { color: var(--green); }
+  h2.s-title { font-size: clamp(28px, 3.4vw, 44px); line-height: 1.08; letter-spacing: -0.02em; font-weight: 500; max-width: 760px; text-wrap: balance; }
+  h2.s-title em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400; }
+  h2.s-title .green { color: var(--green); }
+
+  /* Reality-check */
+  .check {
+    display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--line);
+  }
+  @media (max-width: 720px) { .check { grid-template-columns: 1fr; } }
+  .check .col { padding: 32px 32px 32px 0; border-right: 1px solid var(--line); }
+  .check .col:last-child { border-right: none; padding-left: 32px; padding-right: 0; }
+  @media (max-width: 720px) { .check .col { border-right: none; padding: 24px 0; border-bottom: 1px solid var(--line); } }
+  .check .lab { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 18px; }
+  .check .lab.have { color: var(--green); }
+  .check .lab.tax { color: #d8d8d8; }
+  .check ul { list-style: none; }
+  .check li { padding: 14px 0; border-top: 1px dashed var(--line-2); display: grid; grid-template-columns: 28px 1fr; gap: 12px; color: var(--text-2); font-size: 14px; line-height: 1.55; }
+  .check li:first-child { border-top: none; }
+  .check li b { color: var(--text); font-weight: 500; }
+  .check li .ix { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); padding-top: 2px; }
+
+  /* Capabilities grid */
+  .caps { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  @media (max-width: 900px) { .caps { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .caps { grid-template-columns: 1fr; } }
+  .cap { padding: 28px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .cap .num { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--green); letter-spacing: 0.12em; margin-bottom: 14px; }
+  .cap h3 { font-size: 18px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 10px; }
+  .cap p { color: var(--text-2); font-size: 13px; line-height: 1.6; }
+  .cap p b { color: var(--text); font-weight: 500; }
+
+  /* Playbook timeline */
+  .play { list-style: none; border-top: 1px solid var(--line); }
+  .play li { display: grid; grid-template-columns: 80px 160px 1fr 200px; gap: 24px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+  @media (max-width: 900px) { .play li { grid-template-columns: 1fr; gap: 6px; } }
+  .play .ph { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--green); letter-spacing: 0.1em; padding-top: 4px; }
+  .play .when { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text); }
+  .play .what { color: var(--text-2); font-size: 14px; line-height: 1.6; }
+  .play .what b { color: var(--text); font-weight: 500; }
+  .play .deliv { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.04em; line-height: 1.6; }
+
+  /* Compliance pills */
+  .comply { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+  .comply .pill {
+    border: 1px solid var(--line); padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--text-2); letter-spacing: 0.06em;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .comply .pill .dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; box-shadow: 0 0 6px var(--green); }
+  .comply .pill b { color: var(--text); font-weight: 500; }
+
+  /* Proof / cases */
+  .proof { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 720px) { .proof { grid-template-columns: 1fr; } }
+  .proof a {
+    border: 1px solid var(--line); background: var(--bg-1);
+    padding: 28px; transition: background 0.2s, border-color 0.2s;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .proof a:hover { background: rgba(129,200,40,0.04); border-color: var(--green); }
+  .proof .meta { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.08em; }
+  .proof .meta .green { color: var(--green); }
+  .proof h4 { font-size: 24px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; max-width: 380px; }
+  .proof h4 em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400; }
+  .proof .stats { display: flex; gap: 24px; margin-top: auto; padding-top: 24px; border-top: 1px dashed var(--line-2); }
+  .proof .stats > div { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.06em; }
+  .proof .stats .n { color: var(--green); font-size: 18px; display: block; margin-bottom: 2px; }
+
+  /* FAQ */
+  .faq { border-top: 1px solid var(--line); }
+  .faq details { border-bottom: 1px solid var(--line); padding: 20px 0; }
+  .faq summary { cursor: pointer; list-style: none; font-size: 17px; font-weight: 500; letter-spacing: -0.01em; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; font-family: 'JetBrains Mono', monospace; color: var(--green); font-size: 20px; transition: transform 0.2s; }
+  .faq details[open] summary::after { content: "−"; }
+  .faq p { color: var(--text-2); font-size: 14px; line-height: 1.65; margin-top: 14px; max-width: 760px; }
+  .faq p b { color: var(--text); font-weight: 500; }
+
+  /* CTA strip */
+  .cta-strip {
+    border: 1px solid var(--line);
+    background: var(--bg-1);
+    padding: 48px;
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 32px; align-items: center; margin-top: 48px;
+  }
+  @media (max-width: 720px) { .cta-strip { grid-template-columns: 1fr; padding: 28px; } }
+  .cta-strip h3 { font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; max-width: 520px; }
+  .cta-strip h3 em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400; }
+  .cta-strip h3 .green { color: var(--green); }
+</style>
+</head>
+<body data-screen-label="05 Industry · Banking">
+<div id="cp-nav"></div>
+
+<header class="ind-hero grid-bg">
+  <div class="wrap">
+    <div class="crumb">
+      <a href="index.html">~</a><span class="sep">/</span>
+      <a href="index.html#industries">industries</a><span class="sep">/</span>
+      <span class="here">banking-fintech</span>
+    </div>
+    <div class="eyebrow">INDUSTRY · BANKING &amp; FINTECH</div>
+    <h1>Production AI for the institutions <em>that can&rsquo;t afford</em> <span class="green">a hallucination.</span></h1>
+    <p class="lede">
+      We ship AI for banks, brokerages, and fintech infrastructure &mdash; in regulated environments, on customer
+      VPCs, with deterministic compliance. Every system below is in production today, audited, and serving
+      end customers.
+    </p>
+    <div class="stripe">
+      <div class="cell"><div class="k">CLIENTS</div><div class="v">TPBank · TPS · Sleek</div></div>
+      <div class="cell"><div class="k">USERS REACHED</div><div class="v"><span class="green">1.2M+</span></div></div>
+      <div class="cell"><div class="k">DEPLOYMENT</div><div class="v">VPC · on-prem · hybrid</div></div>
+      <div class="cell"><div class="k">CERTIFICATIONS</div><div class="v">SBV · MAS · AWS Adv</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ========== Reality check ========== -->
+<section class="s">
+  <div class="wrap">
+    <div class="head-row">
+      <div class="head-num"><span class="green">§ 01</span> &nbsp;/&nbsp; REALITY CHECK</div>
+      <div>
+        <h2 class="s-title">Why banking AI projects <em>actually</em> stall.</h2>
+        <p style="margin-top: 16px; color: var(--text-2); font-size: 15px; max-width: 680px;">
+          Most vendors will tell you the model is the hard part. After shipping nine AI systems in regulated finance, we can tell you the model is rarely the hard part.
+        </p>
+      </div>
+    </div>
+    <div class="check">
+      <div class="col">
+        <div class="lab have">▲ WHAT WE BRING</div>
+        <ul>
+          <li><span class="ix">01</span><div><b>VPC-native deployment.</b> Inference runs inside your AWS account or on-prem. Your data never leaves your perimeter. We&rsquo;ve done it for TPBank&rsquo;s core stack and TPS&rsquo;s trading platform.</div></li>
+          <li><span class="ix">02</span><div><b>Deterministic compliance gates.</b> LLM-as-judge isn&rsquo;t enough at 96% &mdash; the 4% is where you get fined. We design rule-layer + classifier hybrids that hit 99.97% on production eval.</div></li>
+          <li><span class="ix">03</span><div><b>Vietnamese vernacular models.</b> We self-host fine-tunes (Qwen-VN, Llama-VN) so retail customers get answers that read like a Vietnamese analyst, not a translation.</div></li>
+          <li><span class="ix">04</span><div><b>Audit log as a first-class deliverable.</b> Every agent action is traceable in an SBV-compliant log from day one. We don&rsquo;t bolt it on at certification time.</div></li>
+          <li><span class="ix">05</span><div><b>Phased rollouts as a default.</b> 5% → 25% → 100%. We&rsquo;ve never put a banking AI in front of 100% of users on day one. Neither should anyone.</div></li>
+        </ul>
+      </div>
+      <div class="col">
+        <div class="lab tax">▼ WHAT KILLS PROJECTS</div>
+        <ul>
+          <li><span class="ix">01</span><div><b>Vendor demos run on toy data.</b> Looks great in a sandbox. Falls over on real customer balances, real KYC edge cases, real Vietnamese names with diacritics.</div></li>
+          <li><span class="ix">02</span><div><b>SaaS APIs that don&rsquo;t pass procurement.</b> Your CISO will not sign off on customer financial data leaving the country. Most vendors don&rsquo;t support VPC.</div></li>
+          <li><span class="ix">03</span><div><b>No eval suite, no recertification.</b> A model that was 99% accurate in March is 92% in October. Without a recertification cadence, you ship drift to customers.</div></li>
+          <li><span class="ix">04</span><div><b>Generic offshore teams without finance domain.</b> Compliance is not a deliverable you write last. It&rsquo;s the architecture.</div></li>
+          <li><span class="ix">05</span><div><b>&ldquo;Pilot purgatory.&rdquo;</b> POCs that never get to production because the production system was never the goal. We design backwards from production from week one.</div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Capabilities ========== -->
+<section class="s">
+  <div class="wrap">
+    <div class="head-row">
+      <div class="head-num"><span class="green">§ 02</span> &nbsp;/&nbsp; CAPABILITIES</div>
+      <div>
+        <h2 class="s-title">Six things we do <em>repeatedly</em> in banking.</h2>
+      </div>
+    </div>
+    <div class="caps">
+      <div class="cap">
+        <div class="num">▸ 01</div>
+        <h3>Multi-agent investing assistants</h3>
+        <p>Research, risk, compliance, and execution as separate agents with hard-typed I/O. <b>Live at TPS Securities, 200K+ users.</b></p>
+      </div>
+      <div class="cap">
+        <div class="num">▸ 02</div>
+        <h3>Core-banking AI overlays</h3>
+        <p>Modernize the customer surface without touching the core ledger. Streaming personalization, in-app advice, fraud signals.</p>
+      </div>
+      <div class="cap">
+        <div class="num">▸ 03</div>
+        <h3>KYC &amp; AML co-pilots</h3>
+        <p>Document parsing, sanctions screening, beneficial-owner unwinding. Human-in-the-loop, with full audit trail.</p>
+      </div>
+      <div class="cap">
+        <div class="num">▸ 04</div>
+        <h3>Internal AI data analysts</h3>
+        <p>Branch managers and credit officers asking natural-language questions of the warehouse. Powered by <b>Presight</b>, our governed analyst.</p>
+      </div>
+      <div class="cap">
+        <div class="num">▸ 05</div>
+        <h3>Compliance gates &amp; eval suites</h3>
+        <p>Hand-tuned rule layers + sentence classifiers. 99.97% pass rate on TPS production. Recertified monthly with the legal team.</p>
+      </div>
+      <div class="cap">
+        <div class="num">▸ 06</div>
+        <h3>Trading &amp; treasury automation</h3>
+        <p>FX desks, treasury workflows, post-trade reconciliation. Deterministic-first, LLM only where the rule layer can&rsquo;t reach.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Playbook ========== -->
+<section class="s">
+  <div class="wrap">
+    <div class="head-row">
+      <div class="head-num"><span class="green">§ 03</span> &nbsp;/&nbsp; PLAYBOOK</div>
+      <div>
+        <h2 class="s-title">How a <em>9-month engagement</em> actually runs.</h2>
+        <p style="margin-top: 16px; color: var(--text-2); font-size: 15px; max-width: 680px;">
+          Drawn from the TPS Securities engagement. Adjusted to your stack, your regulator, and your risk appetite.
+        </p>
+      </div>
+    </div>
+    <ul class="play">
+      <li>
+        <span class="ph">▸ 01</span>
+        <span class="when">Weeks 1–2</span>
+        <span class="what"><b>Discovery on-site.</b> Two weeks at your office. Shadow analysts, traders, compliance. Map the journey, sign data agreements, agree on scope.</span>
+        <span class="deliv">DELIV: scope doc, eval plan, data map</span>
+      </li>
+      <li>
+        <span class="ph">▸ 02</span>
+        <span class="when">Months 1–2</span>
+        <span class="what"><b>Platform v0.</b> Control plane, model integration (Bedrock or in-VPC self-host), first three agents bench-tested against an eval set you co-author.</span>
+        <span class="deliv">DELIV: platform repo, eval harness</span>
+      </li>
+      <li>
+        <span class="ph">▸ 03</span>
+        <span class="when">Month 3</span>
+        <span class="what"><b>Compliance Gate v1.</b> Co-designed with your legal team. Rule layer + classifier. Compliance officer sign-off on eval before we proceed.</span>
+        <span class="deliv">DELIV: gate spec, sign-off doc</span>
+      </li>
+      <li>
+        <span class="ph">▸ 04</span>
+        <span class="when">Months 4–5</span>
+        <span class="what"><b>Closed beta.</b> Internal staff + opted-in users (typically 500&ndash;1,000). Two weekly issue-triage cycles. Tight feedback loop with product.</span>
+        <span class="deliv">DELIV: beta report, p1 fixes</span>
+      </li>
+      <li>
+        <span class="ph">▸ 05</span>
+        <span class="when">Months 6–7</span>
+        <span class="what"><b>Phased launch.</b> 5% → 25% → 100% over four weeks. Sev tracking, on-call rotation, latency SLOs. We&rsquo;re in your incident channel.</span>
+        <span class="deliv">DELIV: prod runbook, SLO doc</span>
+      </li>
+      <li>
+        <span class="ph">▸ 06</span>
+        <span class="when">Months 8–9</span>
+        <span class="what"><b>Handoff &amp; scale.</b> Knowledge transfer to your team, new agents added on demand, recertification cadence locked. We stay on retainer or step away &mdash; your call.</span>
+        <span class="deliv">DELIV: ops handbook, retainer SOW</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ========== Compliance ========== -->
+<section class="s">
+  <div class="wrap">
+    <div class="head-row">
+      <div class="head-num"><span class="green">§ 04</span> &nbsp;/&nbsp; COMPLIANCE</div>
+      <div>
+        <h2 class="s-title">Regulators we&rsquo;ve <em>built against.</em></h2>
+        <p style="margin-top: 16px; color: var(--text-2); font-size: 15px; max-width: 680px;">
+          We don&rsquo;t take a project on without an in-house point of contact who has read the relevant circular. If you&rsquo;re working with a regulator we don&rsquo;t list, we tell you up front.
+        </p>
+      </div>
+    </div>
+    <div class="comply">
+      <span class="pill"><span class="dot"></span><b>SBV</b> · State Bank of Vietnam</span>
+      <span class="pill"><span class="dot"></span><b>SSC</b> · State Securities Commission VN</span>
+      <span class="pill"><span class="dot"></span><b>MAS</b> · Monetary Authority of Singapore</span>
+      <span class="pill"><span class="dot"></span><b>HKMA</b> · Hong Kong Monetary Authority</span>
+      <span class="pill"><span class="dot"></span><b>PCI-DSS</b> · payment data</span>
+      <span class="pill"><span class="dot"></span><b>SOC 2 Type II</b> · controls</span>
+      <span class="pill"><span class="dot"></span><b>ISO 27001</b> · infosec</span>
+      <span class="pill"><span class="dot"></span><b>AWS Advanced Partner</b> · GenAI competency</span>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Proof ========== -->
+<section class="s">
+  <div class="wrap">
+    <div class="head-row">
+      <div class="head-num"><span class="green">§ 05</span> &nbsp;/&nbsp; PROOF</div>
+      <div>
+        <h2 class="s-title">Two systems, in production, <em>right now.</em></h2>
+      </div>
+    </div>
+    <div class="proof">
+      <a href="case-study.html">
+        <div class="meta"><span>CASE.01 · CAPITAL MARKETS</span><span class="green">▸ READ POSTMORTEM</span></div>
+        <h4>TPS Securities &mdash; <em>twelve agents, one compliance gate.</em></h4>
+        <p style="color: var(--text-2); font-size: 14px; line-height: 1.6;">A multi-agent investment assistant embedded in the trading flow. Built in 9 months, scaled to 200K+ retail traders without a sev-1 incident.</p>
+        <div class="stats">
+          <div><span class="n">200K+</span>users</div>
+          <div><span class="n">99.97%</span>compliance</div>
+          <div><span class="n">1.4s</span>p95 latency</div>
+        </div>
+      </a>
+      <a href="#">
+        <div class="meta"><span>CASE.02 · CORE BANKING</span><span class="green">▸ COMING SOON</span></div>
+        <h4>TPBank &mdash; <em>AI-overlay on a 20-year-old core ledger.</em></h4>
+        <p style="color: var(--text-2); font-size: 14px; line-height: 1.6;">Streaming personalization and in-app advice for 12M+ retail customers, without touching the underlying core. NDA case study; reference call available.</p>
+        <div class="stats">
+          <div><span class="n">12M+</span>customers</div>
+          <div><span class="n">99.9%</span>uptime</div>
+          <div><span class="n">20×</span>perf gain</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FAQ ========== -->
+<section class="s">
+  <div class="wrap">
+    <div class="head-row">
+      <div class="head-num"><span class="green">§ 06</span> &nbsp;/&nbsp; QUESTIONS</div>
+      <div>
+        <h2 class="s-title">What CTOs and Heads of Digital <em>actually ask us.</em></h2>
+      </div>
+    </div>
+    <div class="faq">
+      <details open>
+        <summary>Will my customers&rsquo; data leave our VPC?</summary>
+        <p>No. For every banking client we&rsquo;ve worked with, inference runs inside their AWS account or on-prem. We support both Bedrock-in-VPC (Claude, Llama) and self-hosted open-weight models (Qwen, Llama, Mistral). The data plane never crosses your perimeter.</p>
+      </details>
+      <details>
+        <summary>How do you handle hallucinations in a regulated context?</summary>
+        <p>We don&rsquo;t rely on the model alone. Every output that touches a customer passes through a <b>Compliance Gate</b> &mdash; a deterministic rule layer plus a sentence-level classifier. On TPS production we hit 99.97% pass rate. The remaining 0.03% are escalated to human review, never shipped. The legal team owns the rule set; we don&rsquo;t.</p>
+      </details>
+      <details>
+        <summary>Can you work with our existing core / data warehouse?</summary>
+        <p>Yes. We&rsquo;ve integrated against Temenos, Oracle FLEXCUBE, in-house Vietnamese cores, Snowflake, BigQuery, and on-prem Oracle. Our principle: AI overlays the customer surface, never the ledger of record.</p>
+      </details>
+      <details>
+        <summary>What do you do that an in-house team can&rsquo;t?</summary>
+        <p>Two things. First, we&rsquo;ve built the eval and compliance harness nine times &mdash; you&rsquo;d be building it for the first. Second, we have the Vietnamese-vernacular fine-tunes already running in production, which is a multi-month research cost we&rsquo;ve already absorbed. After GA, we hand the platform over and step away or stay on retainer &mdash; your call.</p>
+      </details>
+      <details>
+        <summary>How do you price?</summary>
+        <p>Fixed-scope discovery (~2 weeks, fixed price). Time &amp; materials for build, with a written budget and a quarterly checkpoint. Optional retainer for post-launch ops. We don&rsquo;t do success fees on regulated AI &mdash; the incentives don&rsquo;t align with the customer&rsquo;s safety.</p>
+      </details>
+      <details>
+        <summary>Can we talk to a reference customer?</summary>
+        <p>Yes. After mutual NDA we&rsquo;ll set up a call with a Head of Digital or CTO from one of our banking clients. We&rsquo;ll tell you which one once we know your stack &mdash; we match the reference to the closest analog.</p>
+      </details>
+    </div>
+
+    <div class="cta-strip">
+      <h3>Have a regulated AI project in mind? <em>Tell us about it</em> &mdash; <span class="green">we&rsquo;ll send the playbook.</span></h3>
+      <a class="btn btn-primary" href="contact.html#build">▸ Start a conversation</a>
+    </div>
+  </div>
+</section>
+
+<div id="cp-foot"></div>
+<script src="shared.js"></script>
+<script>CP.mount("industry-banking.html");</script>
+</body>
+</html>

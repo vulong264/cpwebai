@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CoderPush — Start a conversation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="shared.css" />
+<style>
+  /* ============ HERO ============ */
+  .ct-hero { padding: 72px 0 56px; border-bottom: 1px solid var(--line); position: relative; }
+  .ct-hero h1 {
+    font-size: clamp(40px, 5.4vw, 80px); line-height: 1.0; letter-spacing: -0.035em;
+    font-weight: 500; max-width: 1000px; margin-top: 28px;
+  }
+  .ct-hero h1 em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400; }
+  .ct-hero h1 .green { color: var(--green); }
+  .ct-hero .lede { margin-top: 28px; max-width: 660px; font-size: 17px; color: var(--text-2); line-height: 1.65; }
+  .ct-meta { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); margin-top: 48px; }
+  @media (max-width: 720px) { .ct-meta { grid-template-columns: 1fr 1fr; } }
+  .ct-meta .cell { padding: 18px 18px 18px 0; border-right: 1px solid var(--line); }
+  .ct-meta .cell:last-child { border-right: none; }
+  .ct-meta .k { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+  .ct-meta .v { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text); }
+  .ct-meta .v .green { color: var(--green); }
+
+  /* ============ MAIN GRID ============ */
+  .ct-grid {
+    display: grid; grid-template-columns: 1.4fr 1fr;
+    gap: 0; border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 960px) { .ct-grid { grid-template-columns: 1fr; } }
+  .ct-form-col { padding: 64px 56px 64px 0; border-right: 1px solid var(--line); }
+  .ct-side-col { padding: 64px 0 64px 56px; }
+  @media (max-width: 960px) {
+    .ct-form-col { padding: 48px 0; border-right: none; border-bottom: 1px solid var(--line); }
+    .ct-side-col { padding: 48px 0; }
+  }
+
+  /* ============ LANE PICKER ============ */
+  .lane-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px; }
+  .lane-head .label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.1em; }
+  .lane-head .req { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--green); letter-spacing: 0.1em; }
+  .lanes { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 36px; }
+  @media (max-width: 720px) { .lanes { grid-template-columns: 1fr; } }
+  .lane {
+    border: 1px solid var(--line); padding: 22px;
+    cursor: pointer; transition: background 0.15s, border-color 0.15s;
+    display: flex; flex-direction: column; gap: 10px; min-height: 168px;
+  }
+  .lane:hover { border-color: var(--green); background: rgba(129,200,40,0.02); }
+  .lane.active { border-color: var(--green); background: rgba(129,200,40,0.06); }
+  .lane .ix { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--green); letter-spacing: 0.1em; }
+  .lane h4 { font-size: 17px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.2; }
+  .lane h4 em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400; }
+  .lane p { font-size: 12px; color: var(--text-3); line-height: 1.55; margin-top: auto; }
+  .lane .next {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--green); letter-spacing: 0.06em;
+    display: flex; align-items: center; gap: 6px;
+    opacity: 0; transition: opacity 0.15s;
+  }
+  .lane.active .next { opacity: 1; }
+  .lane .next .dot { width: 5px; height: 5px; background: var(--green); border-radius: 50%; box-shadow: 0 0 6px var(--green); }
+
+  /* ============ FORM ============ */
+  form .row { display: grid; gap: 14px; margin-bottom: 14px; }
+  form .row.two { grid-template-columns: 1fr 1fr; }
+  @media (max-width: 600px) { form .row.two { grid-template-columns: 1fr; } }
+  form label {
+    display: block; font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.12em; color: var(--text-3); margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  form label .opt { color: var(--text-4); }
+  form label .req { color: var(--green); }
+  form input[type="text"],
+  form input[type="email"],
+  form input[type="url"],
+  form select,
+  form textarea {
+    width: 100%; background: transparent;
+    border: none; border-bottom: 1px solid var(--line);
+    padding: 10px 0 12px; font: inherit; font-size: 15px; color: var(--text);
+    transition: border-color 0.15s;
+    font-family: 'Inter Tight', sans-serif;
+  }
+  form input:focus, form select:focus, form textarea:focus {
+    outline: none; border-bottom-color: var(--green);
+  }
+  form input::placeholder, form textarea::placeholder { color: var(--text-4); }
+  form select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--text-3) 50%), linear-gradient(135deg, var(--text-3) 50%, transparent 50%); background-position: calc(100% - 12px) 16px, calc(100% - 6px) 16px; background-size: 6px 6px; background-repeat: no-repeat; padding-right: 24px; }
+  form textarea { resize: vertical; min-height: 96px; line-height: 1.55; }
+
+  /* chip group */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    border: 1px solid var(--line); padding: 8px 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--text-2); letter-spacing: 0.06em;
+    cursor: pointer; transition: all 0.12s; user-select: none;
+  }
+  .chip:hover { border-color: var(--text-3); color: var(--text); }
+  .chip.on { border-color: var(--green); color: var(--green); background: rgba(129,200,40,0.06); }
+  .chip.on::before { content: "▸ "; }
+
+  .form-foot {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 36px; padding-top: 24px; border-top: 1px dashed var(--line-2);
+    gap: 16px; flex-wrap: wrap;
+  }
+  .form-foot .privacy { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.04em; line-height: 1.5; max-width: 360px; }
+  .form-foot .privacy .green { color: var(--green); }
+
+  /* dynamic field block */
+  .lane-fields { display: none; }
+  .lane-fields.shown { display: block; }
+  .field-block-head {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--green); letter-spacing: 0.1em; margin: 28px 0 16px;
+    padding-top: 24px; border-top: 1px dashed var(--line-2);
+  }
+
+  /* ============ RIGHT COLUMN ============ */
+  .side-block { margin-bottom: 40px; }
+  .side-block:last-child { margin-bottom: 0; }
+  .side-block .label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--green); letter-spacing: 0.14em; margin-bottom: 16px;
+  }
+  .side-block h3 {
+    font-size: 22px; font-weight: 500; letter-spacing: -0.018em;
+    line-height: 1.2; margin-bottom: 14px;
+  }
+  .side-block h3 em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400; }
+  .side-block p { color: var(--text-2); font-size: 14px; line-height: 1.6; }
+  .side-block p b { color: var(--text); font-weight: 500; }
+
+  /* timeline */
+  .next-steps { list-style: none; padding: 0; }
+  .next-steps li {
+    display: grid; grid-template-columns: 28px 90px 1fr;
+    padding: 14px 0; border-top: 1px dashed var(--line-2);
+    gap: 12px; font-size: 13px; color: var(--text-2); line-height: 1.5;
+  }
+  .next-steps li:first-child { border-top: none; }
+  .next-steps li b { color: var(--text); font-weight: 500; }
+  .next-steps .ix { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--green); letter-spacing: 0.06em; }
+  .next-steps .when { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.04em; }
+
+  /* offices */
+  .offices { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .office {
+    border: 1px solid var(--line); padding: 16px;
+    background: var(--bg-1);
+  }
+  .office h5 {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--text); letter-spacing: 0.1em; margin-bottom: 8px;
+  }
+  .office h5 .green { color: var(--green); }
+  .office p { font-size: 12px; color: var(--text-3); line-height: 1.55; }
+
+  /* direct */
+  .direct { border: 1px solid var(--line); background: var(--bg-1); padding: 20px; }
+  .direct .row {
+    display: flex; justify-content: space-between; padding: 8px 0;
+    border-top: 1px dashed var(--line-2); font-size: 13px;
+  }
+  .direct .row:first-of-type { border-top: none; }
+  .direct .row .k { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.06em; padding-top: 1px; }
+  .direct .row .v { color: var(--text); }
+  .direct .row .v a { color: var(--green); }
+
+  /* ============ POST-SUBMIT ============ */
+  .submitted { display: none; padding: 80px 0; border-bottom: 1px solid var(--line); }
+  .submitted.shown { display: block; }
+  .submitted .ack-head {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--green); letter-spacing: 0.14em;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .submitted .ack-head .pulse {
+    width: 8px; height: 8px; background: var(--green); border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(129,200,40,0.6);
+    animation: pulse 1.6s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(129,200,40,0.6); }
+    70% { box-shadow: 0 0 0 14px rgba(129,200,40,0); }
+    100% { box-shadow: 0 0 0 0 rgba(129,200,40,0); }
+  }
+  .submitted h2 {
+    font-size: clamp(36px, 4.8vw, 64px); line-height: 1.05; letter-spacing: -0.03em;
+    font-weight: 500; max-width: 900px; margin-top: 24px;
+  }
+  .submitted h2 em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400; }
+  .submitted h2 .green { color: var(--green); }
+  .submitted .receipt {
+    margin-top: 40px; border: 1px solid var(--line); background: var(--bg-1);
+    padding: 24px; font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--text-2); max-width: 720px; line-height: 1.7;
+  }
+  .submitted .receipt .row { display: grid; grid-template-columns: 140px 1fr; padding: 6px 0; border-top: 1px dashed var(--line-2); gap: 12px; }
+  .submitted .receipt .row:first-child { border-top: none; }
+  .submitted .receipt .k { color: var(--text-3); letter-spacing: 0.06em; }
+  .submitted .receipt .v { color: var(--text); }
+  .submitted .receipt .v .green { color: var(--green); }
+  .submitted .actions { margin-top: 32px; display: flex; gap: 14px; flex-wrap: wrap; }
+</style>
+</head>
+<body data-screen-label="06 Contact">
+<div id="cp-nav"></div>
+
+<!-- ============ HERO ============ -->
+<header class="ct-hero grid-bg">
+  <div class="wrap">
+    <div class="crumb">
+      <a href="index.html">~</a><span class="sep">/</span>
+      <span class="here">contact</span>
+    </div>
+    <div class="eyebrow">CONTACT · ROUTING THE RIGHT ENGINEER TO YOU</div>
+    <h1>Tell us what you&rsquo;re building. <em>A senior engineer</em> will reply <span class="green">within one business day.</span></h1>
+    <p class="lede">
+      No SDR. No discovery call gatekeeping. Pick a lane below and the form adjusts so we get exactly what we
+      need to route you to the right partner &mdash; hiring lead, AI architect, or audit principal.
+    </p>
+    <div class="ct-meta">
+      <div class="cell"><div class="k">REPLY SLA</div><div class="v"><span class="green">&lt; 1 business day</span></div></div>
+      <div class="cell"><div class="k">FIRST CALL</div><div class="v">45 min · senior eng</div></div>
+      <div class="cell"><div class="k">COST</div><div class="v">free · no NDA needed</div></div>
+      <div class="cell"><div class="k">NEXT AVAIL.</div><div class="v"><span class="green">●</span> this week</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ FORM + SIDE ============ -->
+<div class="wrap" id="contact-main">
+  <div class="ct-grid">
+    <!-- FORM -->
+    <div class="ct-form-col">
+      <div class="lane-head">
+        <span class="label">▸ STEP 01 / WHAT DO YOU NEED?</span>
+        <span class="req">REQUIRED</span>
+      </div>
+
+      <div class="lanes" id="lanes">
+        <button type="button" class="lane active" data-lane="hire">
+          <div class="ix">▸ LANE.A</div>
+          <h4>Hire AI engineers <em>for our team.</em></h4>
+          <p>Embedded senior engineers, four-hour overlap, ramp under three weeks.</p>
+          <span class="next"><span class="dot"></span>ROUTING TO HIRING LEAD</span>
+        </button>
+        <button type="button" class="lane" data-lane="build">
+          <div class="ix">▸ LANE.B</div>
+          <h4>Build an AI <em>product or feature.</em></h4>
+          <p>Multi-agent systems, in-VPC inference, compliance-graded delivery.</p>
+          <span class="next"><span class="dot"></span>ROUTING TO AI ARCHITECT</span>
+        </button>
+        <button type="button" class="lane" data-lane="audit">
+          <div class="ix">▸ LANE.C</div>
+          <h4>Audit our existing <em>AI system.</em></h4>
+          <p>Eval, compliance, cost, latency. Two-week sprint, written report.</p>
+          <span class="next"><span class="dot"></span>ROUTING TO AUDIT PRINCIPAL</span>
+        </button>
+      </div>
+
+      <form id="ct-form" novalidate>
+        <input type="hidden" name="lane" id="f-lane" value="hire" />
+
+        <div class="lane-head">
+          <span class="label">▸ STEP 02 / WHO ARE YOU?</span>
+        </div>
+
+        <div class="row two">
+          <div>
+            <label for="f-name">Full name <span class="req">*</span></label>
+            <input id="f-name" name="name" type="text" placeholder="Jane Doe" required />
+          </div>
+          <div>
+            <label for="f-email">Work email <span class="req">*</span></label>
+            <input id="f-email" name="email" type="email" placeholder="jane@company.com" required />
+          </div>
+        </div>
+        <div class="row two">
+          <div>
+            <label for="f-company">Company <span class="req">*</span></label>
+            <input id="f-company" name="company" type="text" placeholder="Acme Holdings" required />
+          </div>
+          <div>
+            <label for="f-role">Your role <span class="opt">(optional)</span></label>
+            <input id="f-role" name="role" type="text" placeholder="Head of Engineering" />
+          </div>
+        </div>
+
+        <!-- ===== HIRE LANE ===== -->
+        <div class="lane-fields shown" data-lane-fields="hire">
+          <div class="field-block-head">▸ STEP 03 / TEAM SHAPE</div>
+          <div class="row two">
+            <div>
+              <label>Headcount needed <span class="req">*</span></label>
+              <select name="headcount">
+                <option>1 engineer</option>
+                <option>2&ndash;3 engineers (small pod)</option>
+                <option>4&ndash;6 engineers (full pod)</option>
+                <option>7+ (multi-pod)</option>
+              </select>
+            </div>
+            <div>
+              <label>Start window <span class="req">*</span></label>
+              <select name="when">
+                <option>ASAP (within 2 weeks)</option>
+                <option>This quarter</option>
+                <option>Next quarter</option>
+                <option>Exploring · no date yet</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>Skills you need <span class="opt">(pick all that apply)</span></label>
+              <div class="chips" data-chip-group="skills">
+                <span class="chip">AI / LLM</span>
+                <span class="chip">Agent systems</span>
+                <span class="chip">React / RN</span>
+                <span class="chip">Backend (Go / Node / Rails)</span>
+                <span class="chip">Data engineering</span>
+                <span class="chip">DevOps / SRE</span>
+                <span class="chip">Mobile (iOS / Android)</span>
+                <span class="chip">Compliance / regulated</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label for="f-context-hire">Context <span class="opt">(optional but helpful)</span></label>
+              <textarea id="f-context-hire" name="context" placeholder="What is the team working on? What does success look like in 90 days?"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== BUILD LANE ===== -->
+        <div class="lane-fields" data-lane-fields="build">
+          <div class="field-block-head">▸ STEP 03 / PROJECT SHAPE</div>
+          <div class="row two">
+            <div>
+              <label>Project type <span class="req">*</span></label>
+              <select name="ptype">
+                <option>Multi-agent product (greenfield)</option>
+                <option>AI overlay on existing product</option>
+                <option>Internal AI tool / copilot</option>
+                <option>AI data analyst (Presight-style)</option>
+                <option>Not sure yet &mdash; need help scoping</option>
+              </select>
+            </div>
+            <div>
+              <label>Stage <span class="req">*</span></label>
+              <select name="stage">
+                <option>Idea / discovery</option>
+                <option>Spec written, ready to build</option>
+                <option>Existing prototype, scaling up</option>
+                <option>Production, needs rebuild / extension</option>
+              </select>
+            </div>
+          </div>
+          <div class="row two">
+            <div>
+              <label>Deployment requirement</label>
+              <select name="deploy">
+                <option>SaaS is fine</option>
+                <option>VPC / on customer cloud</option>
+                <option>On-premise / air-gapped</option>
+                <option>Not sure</option>
+              </select>
+            </div>
+            <div>
+              <label>Budget range <span class="opt">(rough)</span></label>
+              <select name="budget">
+                <option>Under $50K</option>
+                <option>$50K&ndash;$150K</option>
+                <option>$150K&ndash;$500K</option>
+                <option>$500K+</option>
+                <option>Not sure yet</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>Industry <span class="opt">(optional)</span></label>
+              <div class="chips" data-chip-group="industry">
+                <span class="chip">Banking / capital markets</span>
+                <span class="chip">Fintech / payments</span>
+                <span class="chip">Healthcare / pharma</span>
+                <span class="chip">Energy / utilities</span>
+                <span class="chip">Retail / e-commerce</span>
+                <span class="chip">Public sector</span>
+                <span class="chip">Other</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label for="f-context-build">What are you building? <span class="req">*</span></label>
+              <textarea id="f-context-build" name="context" placeholder="A few sentences — what is it, who is it for, what makes it hard? Link to a spec or doc if you have one."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== AUDIT LANE ===== -->
+        <div class="lane-fields" data-lane-fields="audit">
+          <div class="field-block-head">▸ STEP 03 / SYSTEM IN SCOPE</div>
+          <div class="row two">
+            <div>
+              <label>System status <span class="req">*</span></label>
+              <select name="status">
+                <option>In production today</option>
+                <option>In staging / closed beta</option>
+                <option>Pre-launch / final review</option>
+                <option>Stalled, need a second opinion</option>
+              </select>
+            </div>
+            <div>
+              <label>Concern <span class="req">*</span></label>
+              <select name="concern">
+                <option>Eval / accuracy</option>
+                <option>Compliance / regulator readiness</option>
+                <option>Cost / token spend</option>
+                <option>Latency / scale</option>
+                <option>All of the above</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label for="f-context-audit">What you&rsquo;d like us to look at <span class="req">*</span></label>
+              <textarea id="f-context-audit" name="context" placeholder="What is the system, what is going wrong (or what worries you), and what does success look like at end of the audit?"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-foot">
+          <div class="privacy">
+            <span class="green">▸</span> No NDA needed for first reply. We never train models on inbound info, and never share without written consent.
+          </div>
+          <button type="submit" class="btn btn-primary">SEND TO RIGHT ENGINEER <span class="arrow">→</span></button>
+        </div>
+      </form>
+    </div>
+
+    <!-- SIDE -->
+    <aside class="ct-side-col">
+      <div class="side-block">
+        <div class="label">▸ WHAT HAPPENS NEXT</div>
+        <ul class="next-steps">
+          <li><span class="ix">▸ 01</span><span class="when">&lt; 24 h</span><span><b>A senior engineer reads your form</b> &mdash; not a sales rep. They reply with a routed match.</span></li>
+          <li><span class="ix">▸ 02</span><span class="when">DAYS 2&ndash;5</span><span><b>45-minute scoping call.</b> Bring problems, not specs. We come with reference customers and rough sizing.</span></li>
+          <li><span class="ix">▸ 03</span><span class="when">WEEK 2</span><span><b>Written proposal</b> &mdash; scope, team, milestones, fixed-price discovery if needed. No surprises.</span></li>
+          <li><span class="ix">▸ 04</span><span class="when">WEEK 3+</span><span><b>Engineers in your repo.</b> Avg ramp three weeks. We work in your timezone window.</span></li>
+        </ul>
+      </div>
+
+      <div class="side-block">
+        <div class="label">▸ DIRECT</div>
+        <div class="direct">
+          <div class="row">
+            <span class="k">EMAIL</span>
+            <span class="v"><a href="mailto:hello@coderpush.com">hello@coderpush.com</a></span>
+          </div>
+          <div class="row">
+            <span class="k">HIRING</span>
+            <span class="v"><a href="mailto:hire@coderpush.com">hire@coderpush.com</a></span>
+          </div>
+          <div class="row">
+            <span class="k">PRESS</span>
+            <span class="v"><a href="mailto:press@coderpush.com">press@coderpush.com</a></span>
+          </div>
+          <div class="row">
+            <span class="k">CALENDAR</span>
+            <span class="v"><a href="#">cal.com/coderpush ↗</a></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="side-block">
+        <div class="label">▸ OFFICES</div>
+        <div class="offices">
+          <div class="office">
+            <h5><span class="green">●</span> HCMC</h5>
+            <p>HQ &middot; engineering<br/>District 1, Ho Chi Minh City<br/>UTC+7</p>
+          </div>
+          <div class="office">
+            <h5><span class="green">●</span> HANOI</h5>
+            <p>Engineering &middot; banking practice<br/>Cau Giay, Hanoi<br/>UTC+7</p>
+          </div>
+          <div class="office">
+            <h5>SINGAPORE</h5>
+            <p>Commercial &middot; APAC partners<br/>by appointment<br/>UTC+8</p>
+          </div>
+          <div class="office">
+            <h5>UNITED STATES</h5>
+            <p>East Coast &middot; client ops<br/>remote &middot; 4-hour overlap<br/>UTC&minus;5</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="side-block">
+        <div class="label">▸ NOT SURE WHICH LANE?</div>
+        <h3>Default to <em>Build</em> &mdash; it routes the widest.</h3>
+        <p>If your project doesn&rsquo;t fit, the architect will hand you off internally. You won&rsquo;t need to re-explain it.</p>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- ============ POST-SUBMIT ACK ============ -->
+<section class="submitted" id="ack">
+  <div class="wrap">
+    <div class="ack-head"><span class="pulse"></span>▸ MESSAGE RECEIVED · ROUTED · TIMER STARTED</div>
+    <h2>Got it, <em><span id="ack-name">friend</span></em>. <span id="ack-routed">A senior engineer</span> will reply <span class="green">within one business day.</span></h2>
+    <div class="receipt" id="receipt">
+      <div class="row"><span class="k">RECEIPT</span><span class="v" id="ack-ticket">CP-XXXX-XXXX</span></div>
+      <div class="row"><span class="k">LANE</span><span class="v" id="ack-lane-v"><span class="green">●</span> hire</span></div>
+      <div class="row"><span class="k">ROUTED TO</span><span class="v" id="ack-routed-v">hiring lead</span></div>
+      <div class="row"><span class="k">SLA</span><span class="v"><span class="green">&lt; 1 business day</span></span></div>
+      <div class="row"><span class="k">NEXT</span><span class="v">45-minute scoping call · we&rsquo;ll send 3 windows</span></div>
+    </div>
+    <div class="actions">
+      <a class="btn btn-primary" href="work.html">▸ READ A CASE STUDY <span class="arrow">→</span></a>
+      <a class="btn btn-ghost" href="index.html">← BACK TO HOME</a>
+    </div>
+  </div>
+</section>
+
+<div id="cp-foot"></div>
+<script src="shared.js"></script>
+<script>
+  CP.mount("contact.html");
+
+  // ============ LANE PICKER ============
+  const lanes = document.querySelectorAll('.lane');
+  const fieldBlocks = document.querySelectorAll('[data-lane-fields]');
+  const fLane = document.getElementById('f-lane');
+
+  function setLane(key) {
+    lanes.forEach(l => l.classList.toggle('active', l.dataset.lane === key));
+    fieldBlocks.forEach(b => b.classList.toggle('shown', b.dataset.laneFields === key));
+    fLane.value = key;
+    // sync URL hash so deep-links work
+    history.replaceState(null, '', '#' + key);
+  }
+
+  lanes.forEach(l => l.addEventListener('click', () => setLane(l.dataset.lane)));
+
+  // honor hash on load (e.g. /contact.html#build)
+  const initial = ['hire','build','audit'].includes(location.hash.slice(1))
+    ? location.hash.slice(1) : 'hire';
+  setLane(initial);
+
+  // ============ CHIP GROUPS ============
+  document.querySelectorAll('[data-chip-group]').forEach(group => {
+    group.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => chip.classList.toggle('on'));
+    });
+  });
+
+  // ============ SUBMIT ============
+  const form = document.getElementById('ct-form');
+  const main = document.getElementById('contact-main');
+  const ack = document.getElementById('ack');
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+
+    const fd = new FormData(form);
+    const lane = fd.get('lane');
+    const routedMap = {
+      hire:  { who: 'Our hiring lead',     pretty: 'hiring lead' },
+      build: { who: 'An AI architect',     pretty: 'AI architect' },
+      audit: { who: 'Our audit principal', pretty: 'audit principal' },
+    };
+    const routed = routedMap[lane];
+    const name = (fd.get('name') || '').toString().split(' ')[0] || 'friend';
+    const ticket = 'CP-' +
+      Math.random().toString(36).slice(2,6).toUpperCase() + '-' +
+      Math.random().toString(36).slice(2,6).toUpperCase();
+
+    document.getElementById('ack-name').textContent = name;
+    document.getElementById('ack-routed').textContent = routed.who;
+    document.getElementById('ack-routed-v').textContent = routed.pretty;
+    document.getElementById('ack-lane-v').innerHTML = '<span class="green">●</span> ' + lane;
+    document.getElementById('ack-ticket').textContent = ticket;
+
+    main.style.display = 'none';
+    ack.classList.add('shown');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>

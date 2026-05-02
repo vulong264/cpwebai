@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CoderPush — Hire AI Engineers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="shared.css" />
+<style>
+  .page-hero { padding: 80px 0 60px; border-bottom: 1px solid var(--line); }
+  .page-hero h1 {
+    font-size: clamp(40px, 5.5vw, 76px); line-height: 1.0; letter-spacing: -0.035em;
+    font-weight: 500; max-width: 880px; margin-top: 28px;
+  }
+  .page-hero h1 em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--text-2); font-weight: 400; }
+  .page-hero h1 .green { color: var(--green); }
+
+  /* engineer cards */
+  .eng-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line);
+  }
+  @media (max-width: 900px) { .eng-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .eng-grid { grid-template-columns: 1fr; } }
+  .eng {
+    border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    padding: 28px 24px; background: var(--bg);
+    transition: background 0.2s; min-height: 280px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .eng:hover { background: var(--bg-1); }
+  .eng .av {
+    width: 56px; height: 56px; border: 1px solid var(--line-2); border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 16px; color: var(--green);
+    background: var(--bg-2); letter-spacing: -0.02em;
+  }
+  .eng .name { font-size: 18px; font-weight: 500; letter-spacing: -0.01em; }
+  .eng .role { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.06em; }
+  .eng .stack { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
+  .eng .pill { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-2); border: 1px solid var(--line-2); padding: 3px 7px; border-radius: 2px; }
+  .eng .yrs { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); }
+  .eng .yrs b { color: var(--green); }
+
+  /* process timeline */
+  .proc {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--line); border-left: 1px solid var(--line);
+  }
+  @media (max-width: 900px) { .proc { grid-template-columns: 1fr 1fr; } }
+  .proc .step {
+    border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    padding: 28px 24px; min-height: 200px;
+  }
+  .proc .step .ix { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--green); letter-spacing: 0.1em; margin-bottom: 14px; }
+  .proc .step h4 { font-size: 18px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 10px; }
+  .proc .step p { color: var(--text-2); font-size: 13px; line-height: 1.6; }
+  .proc .step .when {
+    display: block; margin-top: 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-3); letter-spacing: 0.08em;
+  }
+
+  /* compare table */
+  .cmp { border: 1px solid var(--line); }
+  .cmp-row { display: grid; grid-template-columns: 240px 1fr 1fr 1fr; border-bottom: 1px solid var(--line); }
+  .cmp-row:last-child { border-bottom: none; }
+  .cmp-row > div { padding: 16px 22px; border-right: 1px solid var(--line); font-size: 14px; color: var(--text-2); }
+  .cmp-row > div:last-child { border-right: none; }
+  .cmp-row.head > div {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--text-3); letter-spacing: 0.1em; text-transform: uppercase;
+    background: var(--bg-1);
+  }
+  .cmp-row .k { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.06em; }
+  .cmp-row .green-col { background: rgba(129,200,40,0.025); }
+  .cmp-row .yes { color: var(--green); }
+  .cmp-row .meh { color: var(--text-3); }
+  .cmp-row .no { color: var(--text-4); }
+  @media (max-width: 720px) { .cmp-row { grid-template-columns: 1fr; } .cmp-row > div { border-right: none; border-bottom: 1px dashed var(--line-2); } }
+
+  details.faq-q {
+    border-bottom: 1px solid var(--line); padding: 22px 0; cursor: pointer;
+  }
+  details.faq-q summary {
+    list-style: none; display: grid; grid-template-columns: 80px 1fr 24px; gap: 16px;
+    align-items: baseline; font-size: 17px; font-weight: 500; letter-spacing: -0.01em;
+  }
+  details.faq-q summary::-webkit-details-marker { display: none; }
+  details.faq-q summary .num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.1em; }
+  details.faq-q summary .plus { font-family: monospace; color: var(--green); text-align: right; transition: transform 0.2s; }
+  details.faq-q[open] summary .plus { transform: rotate(45deg); }
+  details.faq-q .body { margin-top: 14px; padding-left: 96px; color: var(--text-2); font-size: 14px; line-height: 1.65; max-width: 760px; }
+  @media (max-width: 720px) { details.faq-q .body { padding-left: 0; } details.faq-q summary { grid-template-columns: 60px 1fr 24px; } }
+</style>
+</head>
+<body data-screen-label="03 Hire AI Engineers">
+<div id="cp-nav"></div>
+
+<header class="page-hero grid-bg">
+  <div class="wrap">
+    <div class="crumb"><a href="index.html">~</a><span class="sep">/</span><a href="services.html">services</a><span class="sep">/</span><span class="here">hire-ai-engineers</span></div>
+    <div class="eyebrow">SVC.01 · EMBEDDED</div>
+    <h1>Hire <span class="green">AI engineers</span> who&rsquo;ve already <em>shipped&nbsp;to&nbsp;production.</em></h1>
+    <div class="answer-block" style="max-width: 820px; margin-top: 40px;">
+      <p>
+        Senior engineers, AI-native by default. They embed in your team, ship into your repo, and
+        report to <em>your</em> tech lead. Average ramp is under three weeks; minimum engagement is six.
+        We are not a body shop &mdash; we are people who run AI in production for banks, exchanges, and energy operators.
+      </p>
+      <div class="cite">▸ ANSWER · cite as: coderpush.com/hire-ai-engineers</div>
+    </div>
+    <div style="margin-top: 32px; display: flex; gap: 12px; flex-wrap: wrap;">
+      <a class="btn btn-primary" href="contact.html#hire">SEE THE BENCH <span class="arrow">→</span></a>
+      <a class="btn btn-ghost" href="#process">HOW IT WORKS</a>
+    </div>
+  </div>
+</header>
+
+<!-- BENCH -->
+<section id="bench">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num"><span class="green">§ 01</span> &nbsp;/&nbsp; THE BENCH</div>
+      <div>
+        <h2 class="display">Six engineers <em>available now.</em></h2>
+        <p style="margin-top: 16px; color: var(--text-2); font-size: 15px; max-width: 580px;">
+          Sample of the current bench. Real engineers, real names. Click any card for full résumé and a 15-min intro slot.
+        </p>
+      </div>
+    </div>
+
+    <div class="eng-grid">
+      <div class="eng">
+        <div style="display: flex; gap: 14px; align-items: center;">
+          <div class="av">NL</div>
+          <div>
+            <div class="name">Nguyen Long</div>
+            <div class="role">STAFF · AGENTIC SYSTEMS</div>
+          </div>
+        </div>
+        <p style="color: var(--text-2); font-size: 13px; line-height: 1.6;">Built TPS Mobile AI&rsquo;s 12-agent investing graph. Prior: Bedrock, LangGraph, eval harnesses.</p>
+        <div class="stack">
+          <span class="pill">Python</span><span class="pill">LangGraph</span><span class="pill">Bedrock</span><span class="pill">Eval</span>
+        </div>
+        <div class="yrs"><b>9</b> YRS · AVAILABLE FROM 2026.05.20</div>
+      </div>
+
+      <div class="eng">
+        <div style="display: flex; gap: 14px; align-items: center;">
+          <div class="av">PT</div>
+          <div>
+            <div class="name">Pham Thu</div>
+            <div class="role">SR · DATA PLATFORM</div>
+          </div>
+        </div>
+        <p style="color: var(--text-2); font-size: 13px; line-height: 1.6;">Owns Presight&rsquo;s semantic layer. Lakehouse, dbt, Snowflake, BigQuery. Zero-hallucination architecture.</p>
+        <div class="stack">
+          <span class="pill">dbt</span><span class="pill">Snowflake</span><span class="pill">BQ</span><span class="pill">Python</span>
+        </div>
+        <div class="yrs"><b>11</b> YRS · AVAILABLE FROM 2026.05.06</div>
+      </div>
+
+      <div class="eng">
+        <div style="display: flex; gap: 14px; align-items: center;">
+          <div class="av">TM</div>
+          <div>
+            <div class="name">Tran Minh</div>
+            <div class="role">SR · BACKEND · AI</div>
+          </div>
+        </div>
+        <p style="color: var(--text-2); font-size: 13px; line-height: 1.6;">TPBank fraud-decisioning service. Go, gRPC, low-latency inference, SBV-compliant audit pipelines.</p>
+        <div class="stack">
+          <span class="pill">Go</span><span class="pill">gRPC</span><span class="pill">Postgres</span><span class="pill">Triton</span>
+        </div>
+        <div class="yrs"><b>8</b> YRS · AVAILABLE FROM 2026.05.13</div>
+      </div>
+
+      <div class="eng">
+        <div style="display: flex; gap: 14px; align-items: center;">
+          <div class="av">VK</div>
+          <div>
+            <div class="name">Vo Khanh</div>
+            <div class="role">SR · ML ENGINEER</div>
+          </div>
+        </div>
+        <p style="color: var(--text-2); font-size: 13px; line-height: 1.6;">Vietsovpetro rig anomaly detection &mdash; time-series transformers on noisy industrial sensors.</p>
+        <div class="stack">
+          <span class="pill">PyTorch</span><span class="pill">Time-series</span><span class="pill">Triton</span>
+        </div>
+        <div class="yrs"><b>10</b> YRS · AVAILABLE FROM 2026.06.01</div>
+      </div>
+
+      <div class="eng">
+        <div style="display: flex; gap: 14px; align-items: center;">
+          <div class="av">DH</div>
+          <div>
+            <div class="name">Do Hieu</div>
+            <div class="role">SR · FULLSTACK · AI</div>
+          </div>
+        </div>
+        <p style="color: var(--text-2); font-size: 13px; line-height: 1.6;">Promvis frontend + agent UX. React, TS, streaming UIs, tool-call rendering.</p>
+        <div class="stack">
+          <span class="pill">React</span><span class="pill">TypeScript</span><span class="pill">Vercel</span><span class="pill">Claude</span>
+        </div>
+        <div class="yrs"><b>7</b> YRS · AVAILABLE FROM 2026.05.20</div>
+      </div>
+
+      <div class="eng">
+        <div style="display: flex; gap: 14px; align-items: center;">
+          <div class="av">LH</div>
+          <div>
+            <div class="name">Le Huyen</div>
+            <div class="role">PRINCIPAL · CLOUD/AI</div>
+          </div>
+        </div>
+        <p style="color: var(--text-2); font-size: 13px; line-height: 1.6;">AWS Solutions Architect Pro. Migrations, FinOps, GenAI competency lead. Former AWS Hanoi.</p>
+        <div class="stack">
+          <span class="pill">AWS</span><span class="pill">Bedrock</span><span class="pill">Terraform</span><span class="pill">FinOps</span>
+        </div>
+        <div class="yrs"><b>14</b> YRS · LIMITED AVAILABILITY</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARE -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num"><span class="green">§ 02</span> &nbsp;/&nbsp; COMPARE</div>
+      <div>
+        <h2 class="display">Vietnam vs. India vs. <em>Eastern&nbsp;Europe.</em></h2>
+        <p style="margin-top: 16px; color: var(--text-2); font-size: 15px; max-width: 580px;">
+          Honest comparison. We&rsquo;re not the cheapest &mdash; we&rsquo;re the cheapest <em>per shipped feature</em> at senior level.
+        </p>
+      </div>
+    </div>
+    <div class="cmp">
+      <div class="cmp-row head">
+        <div></div>
+        <div class="green-col">CoderPush · Vietnam</div>
+        <div>India · Tier-1 shops</div>
+        <div>Eastern Europe</div>
+      </div>
+      <div class="cmp-row"><div class="k">Senior rate (mid-2026)</div><div class="green-col">$$ — mid</div><div>$ — low</div><div>$$$ — high</div></div>
+      <div class="cmp-row"><div class="k">AI-native bench</div><div class="green-col yes">Default · 100%</div><div class="meh">Selective</div><div class="meh">Selective</div></div>
+      <div class="cmp-row"><div class="k">Min engagement</div><div class="green-col yes">6 weeks</div><div>3 months</div><div>3 months</div></div>
+      <div class="cmp-row"><div class="k">Talk to senior eng on day 1</div><div class="green-col yes">Yes</div><div class="no">Account manager</div><div class="meh">Sometimes</div></div>
+      <div class="cmp-row"><div class="k">Timezone overlap (US East)</div><div class="green-col">4 hr · evening VN</div><div>3 hr</div><div class="yes">5 hr · day EU</div></div>
+      <div class="cmp-row"><div class="k">Timezone overlap (EU)</div><div class="green-col yes">5 hr · day VN</div><div>5 hr · day IN</div><div class="yes">8 hr · same TZ</div></div>
+      <div class="cmp-row"><div class="k">Average tenure on engagement</div><div class="green-col yes">14 mo</div><div>9 mo</div><div>11 mo</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num"><span class="green">§ 03</span> &nbsp;/&nbsp; PROCESS</div>
+      <div>
+        <h2 class="display">From email to <em>pull request,</em> in 21 days.</h2>
+      </div>
+    </div>
+    <div class="proc">
+      <div class="step">
+        <div class="ix">▸ DAY 0&ndash;3</div>
+        <h4>Scoping call</h4>
+        <p>30 min with a senior engineer (not a salesperson). We confirm shape, stack, and seniority needed. You get a written scope back same day.</p>
+        <span class="when">CALL · WRITTEN SCOPE</span>
+      </div>
+      <div class="step">
+        <div class="ix">▸ DAY 3&ndash;7</div>
+        <h4>Bench match</h4>
+        <p>You see 2&ndash;3 specific engineers from current bench, with résumés and 30-min intro calls. Pass on any. No pressure, no proxies.</p>
+        <span class="when">RÉSUMÉS · INTRO CALLS</span>
+      </div>
+      <div class="step">
+        <div class="ix">▸ DAY 7&ndash;14</div>
+        <h4>Trial week</h4>
+        <p>One paid week. Real ticket, real PR, real review. Either side can walk after &mdash; we eat the cost if you don&rsquo;t move forward.</p>
+        <span class="when">SHIPPED PR · GO/NO-GO</span>
+      </div>
+      <div class="step">
+        <div class="ix">▸ DAY 14&ndash;21</div>
+        <h4>Embed</h4>
+        <p>Engineer is in your stand-ups, your repo, your Slack. SOW signed. Average tenure on the engagement is 14 months.</p>
+        <span class="when">SOW · STAND-UPS · ON-CALL ROTATION</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num"><span class="green">§ 04</span> &nbsp;/&nbsp; FAQ</div>
+      <div><h2 class="display">Things <em>hiring teams</em> ask.</h2></div>
+    </div>
+    <div style="border-top: 1px solid var(--line);">
+      <details class="faq-q" open>
+        <summary><span class="num">Q.01</span><span>What if my engineer rolls off mid-project?</span><span class="plus">+</span></summary>
+        <div class="body">Two-week handover, paired on live PRs with replacement. We don&rsquo;t bill for the overlap. Average tenure is 14 months &mdash; rolloffs are rare.</div>
+      </details>
+      <details class="faq-q">
+        <summary><span class="num">Q.02</span><span>Do you handle SBV / SOC 2 / HIPAA / GDPR controls?</span><span class="plus">+</span></summary>
+        <div class="body">Yes. We&rsquo;re SOC 2 Type II as a firm. SBV-compliant deployments for Vietnamese banking. SCC + DPA for EU. BAA for HIPAA. Engineer machines are FDE + MDM by default.</div>
+      </details>
+      <details class="faq-q">
+        <summary><span class="num">Q.03</span><span>Can I hire one engineer, or do I have to take a team?</span><span class="plus">+</span></summary>
+        <div class="body">One is fine. Most engagements start as one or two engineers. If you want a full pod (4&ndash;8) with a tech lead, that&rsquo;s SVC.02 &mdash; AI Product Development.</div>
+      </details>
+      <details class="faq-q">
+        <summary><span class="num">Q.04</span><span>How do you handle IP and source code?</span><span class="plus">+</span></summary>
+        <div class="body">You own everything. Engineers commit directly to your repo, your IP. Standard work-for-hire under SOW. We don&rsquo;t reuse your code, models, or data.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="padding: 0; border-bottom: none;" id="contact">
+  <div class="cta-split">
+    <div class="cta-pane">
+      <div class="eyebrow">▸ READY</div>
+      <h3>See the bench. <em>Pick your engineer.</em></h3>
+      <p>30-minute scoping call this week. Written scope back same day.</p>
+      <a class="btn btn-primary" href="contact.html#hire">BOOK SCOPING CALL <span class="arrow">→</span></a>
+    </div>
+    <div class="cta-pane">
+      <div class="eyebrow muted">▸ NOT READY YET</div>
+      <h3>Read how we&rsquo;ve <em>done it before.</em></h3>
+      <p>TPS Securities case study &mdash; embedded engineers, multi-agent product, 9 months to production.</p>
+      <a class="btn btn-ghost" href="work.html">SEE ALL WORK <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<div id="cp-foot"></div>
+<script src="shared.js"></script>
+<script>CP.mount("services.html");</script>
+</body>
+</html>
